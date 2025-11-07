@@ -11,6 +11,8 @@
 
 ## Installation
 
+**This repo requires ComfyUI version 0.3.67 or higher**. Make sure your ComfyUI is up to date before installing.
+
 ### ComfyUI Manager
 
 If you are using [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager), you can easily install the ComfyUI-piFlow nodes by searching for "ComfyUI-piFlow" in the Custom Nodes Manager.
