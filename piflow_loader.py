@@ -3,7 +3,7 @@ import torch
 import comfy
 import folder_paths
 from comfy import model_management
-from comfy.model_detection import unet_prefix_from_state_dict, convert_diffusers_mmdit, model_config_from_diffusers_unet, detect_unet_config
+from comfy.model_detection import unet_prefix_from_state_dict, convert_diffusers_mmdit, detect_unet_config
 from .modules.model_detection import model_config_from_piflow
 
 
