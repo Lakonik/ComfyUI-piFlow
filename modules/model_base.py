@@ -79,7 +79,11 @@ class BasePiFlow(BaseModel):
         if not unet_config.get("disable_unet_model_creation", False):
             if model_config.custom_operations is None:
                 fp8 = model_config.optimizations.get("fp8", False)
-                operations = comfy.ops.pick_operations(unet_config.get("dtype", None), self.manual_cast_dtype, fp8_optimizations=fp8, scaled_fp8=model_config.scaled_fp8, model_config=model_config)
+                kwargs = dict(fp8_optimizations=fp8, scaled_fp8=model_config.scaled_fp8,)
+                if model_config and hasattr(model_config, 'layer_quant_config') and model_config.layer_quant_config:
+                    kwargs.update(model_config=model_config)
+                operations = comfy.ops.pick_operations(
+                    unet_config.get("dtype", None), self.manual_cast_dtype, **kwargs)
             else:
                 operations = model_config.custom_operations
             self.diffusion_model = diffusion_model(**unet_config, device=device, operations=operations)

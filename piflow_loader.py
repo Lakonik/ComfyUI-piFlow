@@ -106,7 +106,7 @@ def load_piflow_model_state_dict(
         unet_dtype = dtype
 
     load_device = model_management.get_torch_device()
-    if model_config.layer_quant_config is not None:
+    if getattr(model_config, 'layer_quant_config', None) is not None:
         manual_cast_dtype = model_management.unet_manual_cast(
             None, load_device, model_config.supported_inference_dtypes)
     else:

@@ -2,8 +2,12 @@ import json
 import logging
 import torch
 from typing import Dict
-from comfy.model_detection import detect_unet_config, detect_layer_quantization
+from comfy.model_detection import detect_unet_config
 from .supported_models import models
+try:
+    from comfy.model_detection import detect_layer_quantization
+except ImportError:
+    detect_layer_quantization = None
 
 
 def _has_gm_heads(sd: Dict[str, object], prefix: str) -> bool:
@@ -134,10 +138,11 @@ def model_config_from_piflow(state_dict, key_prefix, metadata=None):
         else:
             model_config.optimizations["fp8"] = True
 
-    # Detect per-layer quantization (mixed precision)
-    layer_quant_config = detect_layer_quantization(metadata)
-    if layer_quant_config:
-        model_config.layer_quant_config = layer_quant_config
-        logging.info(f"Detected mixed precision quantization: {len(layer_quant_config)} layers quantized")
+    if detect_layer_quantization is not None:
+        # Detect per-layer quantization (mixed precision)
+        layer_quant_config = detect_layer_quantization(metadata)
+        if layer_quant_config:
+            model_config.layer_quant_config = layer_quant_config
+            logging.info(f"Detected mixed precision quantization: {len(layer_quant_config)} layers quantized")
 
     return model_config
