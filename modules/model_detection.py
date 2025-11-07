@@ -2,7 +2,7 @@ import json
 import logging
 import torch
 from typing import Dict
-from comfy.model_detection import detect_unet_config, detect_layer_quantization
+from comfy.model_detection import detect_unet_config
 from .supported_models import models
 
 
@@ -112,6 +112,17 @@ def model_config_from_piflow_config(unet_config, policy_config, state_dict=None)
     logging.error("no match {}".format(unet_config))
     return None
 
+def detect_layer_quantization(metadata):
+    quant_key = "_quantization_metadata"
+    if metadata is not None and quant_key in metadata:
+        quant_metadata = metadata.pop(quant_key)
+        quant_metadata = json.loads(quant_metadata)
+        if isinstance(quant_metadata, dict) and "layers" in quant_metadata:
+            logging.info(f"Found quantization metadata (version {quant_metadata.get('format_version', 'unknown')})")
+            return quant_metadata["layers"]
+        else:
+            raise ValueError("Invalid quantization metadata format")
+    return None
 
 def model_config_from_piflow(state_dict, key_prefix, metadata=None):
     unet_config, policy_config = detect_piflow_config(
