@@ -15,7 +15,7 @@
 
 ### ComfyUI Manager
 
-If you are using [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager), you can easily install the ComfyUI-piFlow nodes by searching for "ComfyUI-piFlow" in the Custom Nodes Manager.
+If you are using [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager), you can load a [workflow](#workflows) first, and then install the missing nodes via ComfyUI Manager.
 
 ### Manual Installation
 
