@@ -1,0 +1,14 @@
+[project]
+name = "comfyui-piflow"
+description = "ComfyUI pi-Flow nodes for fast few-step sampling."
+version = "1.0.0"
+license = {file = "LICENSE"}
+
+[project.urls]
+Repository = "https://github.com/Lakonik/ComfyUI-piFlow"
+"Bug Tracker" = "https://github.com/Lakonik/ComfyUI-piFlow/issues"
+
+[tool.comfy]
+PublisherId = "lakonik"
+DisplayName = "ComfyUI-piFlow"
+Icon = "https://avatars.githubusercontent.com/u/53893837"
