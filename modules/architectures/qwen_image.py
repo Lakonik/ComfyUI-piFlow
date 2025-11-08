@@ -1,4 +1,5 @@
 import torch
+import comfy.ldm.qwen_image.model
 from comfy.ldm.qwen_image.model import QwenImageTransformer2DModel
 
 
@@ -54,7 +55,11 @@ class QwenImageTransformer2DModelMod(QwenImageTransformer2DModel):
         txt_start = round(max(((x.shape[-1] + (self.patch_size // 2)) // self.patch_size) // 2, ((x.shape[-2] + (self.patch_size // 2)) // self.patch_size) // 2))
         txt_ids = torch.arange(txt_start, txt_start + context.shape[1], device=x.device).reshape(1, -1, 1).repeat(x.shape[0], 1, 3)
         ids = torch.cat((txt_ids, img_ids), dim=1)
-        image_rotary_emb = self.pe_embedder(ids).squeeze(1).unsqueeze(2).to(x.dtype)
+        image_rotary_emb = self.pe_embedder(ids)
+        if not hasattr(comfy.ldm.qwen_image.model, 'apply_rope1'):  # old version check
+            image_rotary_emb = image_rotary_emb.squeeze(1).unsqueeze(2)
+        image_rotary_emb = image_rotary_emb.to(x.dtype).contiguous()
+
         del ids, txt_ids, img_ids
 
         hidden_states = self.img_in(hidden_states)
