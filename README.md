@@ -11,7 +11,7 @@
 
 ## Installation
 
-**This repo requires ComfyUI version 0.3.67 or higher**. Make sure your ComfyUI is up to date before installing.
+**This repo requires ComfyUI version 0.3.64 or higher**. Make sure your ComfyUI is up to date before installing.
 
 ### ComfyUI Manager
 
