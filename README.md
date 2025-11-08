@@ -9,6 +9,10 @@
 
 <img src="https://raw.githubusercontent.com/Lakonik/piFlow/refs/heads/main/assets/diversity_comparison.jpg" width="1000" alt=""/>
 
+In addition, when using photorealistic style LoRAs, pi-Flow produces significantly better texture details than DMD models, as shown below (zoom in for best view).
+
+<img src="https://raw.githubusercontent.com/Lakonik/piFlow/refs/heads/main/assets/piflow_dmd_texture_comparison.jpg" width="1000" alt=""/>
+
 ## Installation
 
 **This repo requires ComfyUI version 0.3.64 or higher**. Make sure your ComfyUI is up to date before installing.
