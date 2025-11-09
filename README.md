@@ -29,6 +29,11 @@ For manual installation, simply clone this repo into your ComfyUI `custom_nodes`
 git clone https://github.com/Lakonik/ComfyUI-piFlow
 ```
 
+### Changelog
+
+- **v1.0.3** (2025-11-09)
+  - Added support for scaled FP8 base models.
+
 ## Workflows
 
 This repo provides text-to-image [workflows](workflows) based on Qwen-Image and FLUX.1 dev. 
