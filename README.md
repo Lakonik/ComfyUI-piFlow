@@ -9,7 +9,7 @@
 
 <img src="https://raw.githubusercontent.com/Lakonik/piFlow/refs/heads/main/assets/diversity_comparison.jpg" width="1000" alt=""/>
 
-In addition, when using photorealistic style LoRAs, pi-Flow produces significantly better texture details than DMD models, as shown below (zoom in for best view).
+In addition, when using photorealistic style LoRAs (e.g., [Lenovo UltraReal](https://civitai.com/models/1662740?modelVersionId=2106185), [SamsungCam UltraReal](https://civitai.com/models/1551668?modelVersionId=2270374)), pi-Flow produces better texture details than DMD models, as shown below (zoom in for best view).
 
 <img src="https://raw.githubusercontent.com/Lakonik/piFlow/refs/heads/main/assets/piflow_dmd_texture_comparison.jpg" width="1000" alt=""/>
 
