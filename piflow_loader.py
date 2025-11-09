@@ -38,6 +38,7 @@ def convert_diffusers_to_comfyui(state_dict, diffusers_weight, comfy_weight_map)
             target_slice = updated_weight = diffusers_weight
         target_slice[:] = weight_convert_fun(diffusers_weight)
         state_dict[comfy_weight_key] = updated_weight
+    return comfy_weight_key
 
 
 def load_piflow_model_state_dict(
@@ -67,6 +68,9 @@ def load_piflow_model_state_dict(
     lora_sd = {}
 
     if adapter_sd is not None:
+        updated_weight_layers = set()
+        updated_keys = set()
+
         key_mapping = {}
         base_image_model = base_unet_config["image_model"]
         if base_image_model == 'flux':  # requires conversion
@@ -80,9 +84,21 @@ def load_piflow_model_state_dict(
                     lora_sd[k] = adapter_sd[k]
             else:
                 if k in key_mapping:  # convert_diffusers_mmdit
-                    convert_diffusers_to_comfyui(new_sd, adapter_sd[k], key_mapping[k])
+                    comfy_weight_key = convert_diffusers_to_comfyui(new_sd, adapter_sd[k], key_mapping[k])
                 else:
                     new_sd[k] = adapter_sd[k]
+                    comfy_weight_key = k
+                updated_keys.add(comfy_weight_key)
+                if comfy_weight_key.endswith(".weight"):
+                    layer_name = comfy_weight_key[:-7]
+                    updated_weight_layers.add(layer_name)
+
+        # unset scales in the base model for updated layers
+        for layer in updated_weight_layers:
+            for scale_postfix in ["scale_input", "scale_weight"]:
+                scale_key = '.'.join([layer, scale_postfix])
+                if scale_key in new_sd and scale_key not in updated_keys:
+                    del new_sd[scale_key]
 
         metadata.update(adapter_metadata)
 
