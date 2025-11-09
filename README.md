@@ -31,19 +31,93 @@ git clone https://github.com/Lakonik/ComfyUI-piFlow
 
 ## Workflows
 
-This repo provides text-to-image [workflows](workflows) based on FLUX.1 dev and Qwen-Image. 
+This repo provides text-to-image [workflows](workflows) based on Qwen-Image and FLUX.1 dev. 
 
 ### pi-Qwen-Image
+
+Currently supports the Qwen-Image text-to-image base model (and possibly some of its customized versions). Qwen-Image-Edit may be supported in the future.
 
 Please download the image below and drag it into ComfyUI to load the pi-Qwen-Image workflow.  
 
 <img src="workflows/pi-Qwen-Image.png" width="600" alt=""/>
 
+#### Model links
+
+Base model
+
+- Download [qwen_image_fp8_e4m3fn.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/diffusion_models/qwen_image_fp8_e4m3fn.safetensors) and save it to
+<br>`models/diffusion_models/qwen_image_fp8_e4m3fn.safetensors`
+
+pi-Flow adapter
+
+- Download [gmqwen_k8_piid_4step/diffusion_pytorch_model.safetensors](https://huggingface.co/Lakonik/pi-Qwen-Image/resolve/main/gmqwen_k8_piid_4step/diffusion_pytorch_model.safetensors) and save it to 
+<br>`models/loras/gmqwen_k8_piid_4step.safetensors`
+
+Text encoder
+
+- Download [qwen_2.5_vl_7b_fp8_scaled.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors) and save it to
+<br>`models/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors`
+
+VAE
+
+- Download [qwen_image_vae.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/main/split_files/vae/qwen_image_vae.safetensors) and save it to
+<br>`models/vae/qwen_image_vae.safetensors`
+
+#### Adapter strength
+
+Increasing `adapter_strength` in the loader node can reduce noise and enhance text rendering. This may be helpful especially when using a customized base model or additional LoRAs.
+
+#### Sampler steps
+
+The 4-step adapter works well for any number of sampling steps greater than or equal to 4.
+
 ### pi-Flux
+
+Currently supports the FLUX.1 dev text-to-image base model (and possibly some of its customized versions).
 
 Please download the image below and drag it into ComfyUI to load the pi-Flux workflow.  
 
 <img src="workflows/pi-Flux.png" width="600" alt=""/>
+
+#### Model links
+
+Base model
+
+- Download [flux1-dev.safetensors](https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/flux1-dev.safetensors) and save it to
+<br>`models/diffusion_models/flux1-dev.safetensors`
+
+pi-Flow adapter
+
+- Download [gmflux_k8_piid_4step/diffusion_pytorch_model.safetensors](https://huggingface.co/Lakonik/pi-FLUX.1/resolve/main/gmflux_k8_piid_4step/diffusion_pytorch_model.safetensors) and save it to 
+<br>`models/loras/gmflux_k8_piid_4step.safetensors`
+
+- Download [gmflux_k8_piid_8step/diffusion_pytorch_model.safetensors](https://huggingface.co/Lakonik/pi-FLUX.1/resolve/main/gmflux_k8_piid_8step/diffusion_pytorch_model.safetensors) and save it to 
+<br>`models/loras/gmflux_k8_piid_8step.safetensors`
+
+Text encoder
+
+- Download [clip_l.safetensors](https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors) and save it to
+<br>`models/text_encoders/clip_l.safetensors`
+
+- Download [t5xxl_fp16.safetensors](https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/t5xxl_fp16.safetensors) and save it to
+<br>`models/text_encoders/t5xxl_fp16.safetensors`
+
+VAE
+
+- Download [ae.safetensors](https://huggingface.co/black-forest-labs/FLUX.1-schnell/resolve/main/ae.safetensors) and save it to
+<br>`models/vae/ae.safetensors`
+
+#### Adapter strength
+
+Increasing `adapter_strength` in the loader node can amplify contrast, reduce noise, and enhance text rendering.
+
+#### Sampler steps
+
+Use gmflux_k8_piid_4step.safetensors for 4-step sampling and gmflux_k8_piid_8step.safetensors for 8-step sampling. Using other settings may result in amplified or reduced contrast, which could be re-calibrated by adjusting the `adapter_strength`.
+
+#### Guidance 
+
+The adapters only work with `guidance` set to 3.5. Do NOT modify this value.
 
 ## Training Your Own pi-Flow Models
 
