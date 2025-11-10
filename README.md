@@ -9,7 +9,7 @@
 
 <img src="https://raw.githubusercontent.com/Lakonik/piFlow/refs/heads/main/assets/diversity_comparison.jpg" width="1000" alt=""/>
 
-In addition, when using photorealistic style LoRAs (e.g., [Lenovo UltraReal](https://civitai.com/models/1662740?modelVersionId=2106185), [SamsungCam UltraReal](https://civitai.com/models/1551668?modelVersionId=2270374)), pi-Flow produces better texture details than DMD models, as shown below (zoom in for best view).
+In addition, when using some photorealistic style LoRAs, pi-Flow produces better texture details than DMD models, as shown below (zoom in for best view).
 
 <img src="https://raw.githubusercontent.com/Lakonik/piFlow/refs/heads/main/assets/piflow_dmd_texture_comparison.jpg" width="1000" alt=""/>
 
@@ -28,11 +28,6 @@ For manual installation, simply clone this repo into your ComfyUI `custom_nodes`
 # run the following command in your ComfyUI `custom_nodes` directory
 git clone https://github.com/Lakonik/ComfyUI-piFlow
 ```
-
-### Changelog
-
-- **v1.0.3** (2025-11-09)
-  - Added support for scaled FP8 base models.
 
 ## Workflows
 
@@ -131,3 +126,11 @@ The adapters only work with `guidance` set to 3.5. Do NOT modify this value.
 ## Training Your Own pi-Flow Models
 
 Please visit the official [piFlow](https://github.com/lakonik/piflow) repo for more information on training.
+
+## Changelog
+
+- **v1.0.4** (2024-11-09)
+  - Fix a bug in GM-Qwen when running in BF16 precision.
+
+- **v1.0.3** (2025-11-09)
+  - Added support for scaled FP8 base models.
