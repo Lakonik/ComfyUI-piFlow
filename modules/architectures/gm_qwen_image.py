@@ -174,7 +174,7 @@ class GMQwenImageTransformer2DModel(QwenImageTransformer2DModel):
                 bs, k, 1, 1, h * self.patch_size, w * self.patch_size
             )[..., :x.shape[-2], :x.shape[-1]].log_softmax(dim=1)
         if self.constant_logstd is None:
-            out_logstds = self.proj_out_logstds(temb.detach()).reshape(bs, 1, 1, 1, 1, 1)
+            out_logstds = self.proj_out_logstds(temb.detach().float()).reshape(bs, 1, 1, 1, 1, 1)
         else:
             out_logstds = hidden_states.new_full((bs, 1, 1, 1, 1, 1), float(self.constant_logstd))
 
