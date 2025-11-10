@@ -121,7 +121,7 @@ Use gmflux_k8_piid_4step.safetensors for 4-step sampling and gmflux_k8_piid_8ste
 
 #### Guidance 
 
-The adapters only work with `guidance` set to 3.5. Do NOT modify this value.
+The adapters **only work with `guidance` set to 3.5**. Do NOT modify this value, otherwise the results will be very noisy.
 
 ## Training Your Own pi-Flow Models
 
