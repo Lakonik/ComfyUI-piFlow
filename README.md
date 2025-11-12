@@ -127,6 +127,10 @@ The adapters **only work with `guidance` set to 3.5**. Do NOT modify this value,
 
 Please visit the official [piFlow](https://github.com/lakonik/piflow) repo for more information on training.
 
+## License
+
+This code repository is licensed under the Apache-2.0 License. Models used in the workflows are subject to their own respective licenses.
+
 ## Changelog
 
 - **v1.0.4** (2024-11-09)
