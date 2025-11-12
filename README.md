@@ -133,7 +133,11 @@ This code repository is licensed under the Apache-2.0 License. Models used in th
 
 ## Changelog
 
-- **v1.0.4** (2024-11-09)
+- **v1.0.5** (2025-11-11)
+  - Add experimental support for polynomial-based DX policy.
+  - Update README.md and pi-Flux workflow (highlighting the FluxGuidance setting).
+
+- **v1.0.4** (2025-11-09)
   - Fix a bug in GM-Qwen when running in BF16 precision.
 
 - **v1.0.3** (2025-11-09)
