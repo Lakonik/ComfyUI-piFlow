@@ -225,7 +225,7 @@ class AsymFlux2(supported_models_base.BASE):
         super().__init__(unet_config)
         hidden_size = unet_config["hidden_size"]
         patch_size = unet_config["patch_size"]
-        self.memory_usage_factor = self.memory_usage_factor * (2.0 * 2.0) * (hidden_size / 2604) / (patch_size * patch_size)
+        self.memory_usage_factor = self.memory_usage_factor * (2.0 * 2.0) * (hidden_size / 2604) / ((patch_size // 2) ** 2)
 
     def get_model(self, state_dict, prefix="", device=None):
         out = model_base.AsymFlux2(self, device=device)
