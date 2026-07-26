@@ -19,7 +19,7 @@
 
 ## Installation
 
-**This extension (version 1.2.0 and above) requires ComfyUI version 0.17.0 or higher**. Older ComfyUI releases are no longer supported.
+**This extension requires ComfyUI version 0.23.0 or higher**. Older ComfyUI releases are no longer supported.
 
 **Please uninstall any non-official AsymFlow or pi-Flow extensions before installing this extension**, as they may cause compatibility issues.
 
@@ -40,6 +40,9 @@ git clone https://github.com/Lakonik/ComfyUI-piFlow
 This code repository is licensed under the Apache-2.0 License. Models used in the workflows are subject to their own respective licenses.
 
 ## Changelog
+
+- **v1.3.3** (2026-07-25)
+  - Require ComfyUI v0.23.0 or newer and fix pi-Flow sampling with the current `ModelPatcher.prepare_state` API ([#36](https://github.com/Lakonik/ComfyUI-piFlow/issues/36), [#37](https://github.com/Lakonik/ComfyUI-piFlow/issues/37)).
 
 - **v1.3.2** (2026-05-23)
   - Fix AsymFLUX.2 patchification rounding.

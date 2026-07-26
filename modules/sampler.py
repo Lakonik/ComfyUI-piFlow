@@ -125,7 +125,7 @@ def _calc_cond_batch(model: BasePiFlow, conds: list[list[dict]], x_in: torch.Ten
     if has_default_conds:
         finalize_default_conds(model, hooked_to_run, default_conds, x_in, timestep, model_options)
 
-    model.current_patcher.prepare_state(timestep)
+    model.current_patcher.prepare_state(timestep, model_options)
 
     # run every hooked_to_run separately
     for hooks, to_run in hooked_to_run.items():
