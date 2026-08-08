@@ -41,6 +41,9 @@ This code repository is licensed under the Apache-2.0 License. Models used in th
 
 ## Changelog
 
+- **v1.3.4** (2026-08-08)
+  - Fix an incompatibility that caused MiniMax H3 workflows to fail during live preview ([#38](https://github.com/Lakonik/ComfyUI-piFlow/issues/38)).
+
 - **v1.3.3** (2026-07-25)
   - Require ComfyUI v0.23.0 or newer and fix pi-Flow sampling with the current `ModelPatcher.prepare_state` API ([#36](https://github.com/Lakonik/ComfyUI-piFlow/issues/36), [#37](https://github.com/Lakonik/ComfyUI-piFlow/issues/37)).
 

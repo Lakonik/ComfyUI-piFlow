@@ -77,6 +77,9 @@ def install_pixel_previewer():
         except Exception:
             return original_prepare_callback(model, steps, x0_output_dict=x0_output_dict)
 
+        if not isinstance(latent_format, PixelPreviewLatentFormat):
+            return original_prepare_callback(model, steps, x0_output_dict=x0_output_dict)
+
         previewer = get_previewer(model.load_device, latent_format)
         progress = latent_preview.comfy.utils.ProgressBar(steps)
 
@@ -86,6 +89,8 @@ def install_pixel_previewer():
 
             preview_bytes = None
             if previewer:
+                if getattr(x0, "is_nested", False):
+                    x0 = x0.tensors[0]
                 preview_bytes = previewer.decode_latent_to_preview_image("JPEG", x0)
             progress.update_absolute(step + 1, total_steps, preview_bytes)
 
