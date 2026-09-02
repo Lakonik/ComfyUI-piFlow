@@ -136,11 +136,19 @@ def merge_adapter_state_dict(base_model_sd, base_unet_config, adapter_sd=None, a
             if comfy_weight_key.endswith(".weight"):
                 updated_weight_layers.add(comfy_weight_key[:-7])
 
+    quantization_postfixes = [
+        "scale_input",
+        "scale_weight",
+        "input_scale",
+        "weight_scale",
+        "weight_scale_2",
+        "comfy_quant",
+    ]
     for layer in updated_weight_layers:
-        for scale_postfix in ["scale_input", "scale_weight", "input_scale", "weight_scale"]:
-            scale_key = ".".join([layer, scale_postfix])
-            if scale_key in new_sd and scale_key not in updated_keys:
-                del new_sd[scale_key]
+        for postfix in quantization_postfixes:
+            auxiliary_key = ".".join([layer, postfix])
+            if auxiliary_key in new_sd and auxiliary_key not in updated_keys:
+                del new_sd[auxiliary_key]
 
     metadata.update(adapter_metadata)
     return new_sd, lora_sd, metadata

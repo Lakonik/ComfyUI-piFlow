@@ -41,6 +41,9 @@ This code repository is licensed under the Apache-2.0 License. Models used in th
 
 ## Changelog
 
+- **v1.3.5** (2026-09-01)
+  - Support loading ComfyUI-native INT8 ConvRot models ([#39](https://github.com/Lakonik/ComfyUI-piFlow/issues/39)).
+
 - **v1.3.4** (2026-08-08)
   - Fix an incompatibility that caused MiniMax H3 workflows to fail during live preview ([#38](https://github.com/Lakonik/ComfyUI-piFlow/issues/38)).
 
