@@ -41,6 +41,10 @@ This code repository is licensed under the Apache-2.0 License. Models used in th
 
 ## Changelog
 
+- **v1.3.6** (2026-09-03)
+  - Improve model loading and reuse for pi-Flow and AsymFlow workflows ([#35](https://github.com/Lakonik/ComfyUI-piFlow/issues/35)).
+  - Refactor pi-Flow policy rollout to match latest LakonLab implementation.  
+
 - **v1.3.5** (2026-09-01)
   - Support loading ComfyUI-native INT8 ConvRot models ([#39](https://github.com/Lakonik/ComfyUI-piFlow/issues/39)).
 

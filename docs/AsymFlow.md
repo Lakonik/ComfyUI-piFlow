@@ -22,7 +22,7 @@ We provide three variants of the adapter:
 
   Please download the image below and drag it into ComfyUI to load the workflow.  
 
-  <img src="../workflows/AsymFlux2-klein-9b.png" width="300" alt=""/>
+  <img src="../workflows/AsymFlux2-klein-9B.png" width="300" alt=""/>
 
 - **AsymFLUX.2 klein 9B SFT Z-Image Turbo**
 
@@ -33,7 +33,7 @@ We provide three variants of the adapter:
 
   Please download the image below and drag it into ComfyUI to load the workflow.
 
-  <img src="../workflows/AsymFlux2-klein-9b-SFT_ZImage_Turbo.png" width="300" alt=""/>
+  <img src="../workflows/AsymFlux2-klein-9B-SFT_ZImage_Turbo.png" width="300" alt=""/>
 
 - **AsymFLUX.2 klein 9B SFT FLUX.2 klein**
 
@@ -44,7 +44,7 @@ We provide three variants of the adapter:
 
   Please download the image below and drag it into ComfyUI to load the workflow.
 
-  <img src="../workflows/AsymFlux2-klein-9b-SFT-Flux2-klein.png" width="300" alt=""/>
+  <img src="../workflows/AsymFlux2-klein-9B-SFT-Flux2-klein.png" width="300" alt=""/>
 
 #### Model links
 
