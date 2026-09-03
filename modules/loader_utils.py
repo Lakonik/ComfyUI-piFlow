@@ -469,12 +469,14 @@ def load_lakonlab_model_from_gguf(
         base_model_path, adapter_path, model_options=None, adapter_strength=1.0,
         dequant_dtype=None, patch_dtype=None, patch_on_device=None,
         model_config_factory=None, error_label="model",
-        gguf_model_patcher=None, gguf_sd_loader=None, ggml_ops_class=None):
+        gguf_model_patcher=None, gguf_sd_loader=None, ggml_ops_class=None,
+        disable_dynamic=False):
     if gguf_model_patcher is None:
         raise RuntimeError(
             "ComfyUI-GGUF not found. Please install the ComfyUI-GGUF custom nodes to enable GGUF loading.")
     if model_options is None:
         model_options = {}
+    reload_model_options = model_options.copy()
 
     ops = ggml_ops_class()
     set_gguf_linear_dtypes(ops, dequant_dtype=dequant_dtype, patch_dtype=patch_dtype)
@@ -487,7 +489,7 @@ def load_lakonlab_model_from_gguf(
         base_model_sd = loaded_gguf_data
         base_metadata = None
 
-    model_options = model_options.copy()
+    model_options = reload_model_options.copy()
     model_options.update(custom_operations=ops)
 
     adapter_sd = adapter_metadata = None
@@ -497,7 +499,8 @@ def load_lakonlab_model_from_gguf(
     model, lora_sd = load_lakonlab_model_state_dict(
         base_model_sd, adapter_sd=adapter_sd, model_options=model_options,
         base_metadata=base_metadata, adapter_metadata=adapter_metadata,
-        model_config_factory=model_config_factory)
+        model_config_factory=model_config_factory,
+        disable_dynamic=disable_dynamic)
     if model is None:
         logging.error("ERROR UNSUPPORTED %s MODEL", error_label.upper())
         raise RuntimeError("ERROR: Could not detect {} model type of: {}\n".format(error_label, base_model_path))
@@ -507,5 +510,13 @@ def load_lakonlab_model_from_gguf(
 
     if len(lora_sd) > 0:
         model, _ = comfy.sd.load_lora_for_models(model, None, lora_sd, adapter_strength, None)
+
+    model.cached_patcher_init = (
+        load_lakonlab_model_from_gguf,
+        (base_model_path, adapter_path, reload_model_options, adapter_strength,
+         dequant_dtype, patch_dtype, patch_on_device,
+         model_config_factory, error_label,
+         gguf_model_patcher, gguf_sd_loader, ggml_ops_class),
+    )
 
     return model
