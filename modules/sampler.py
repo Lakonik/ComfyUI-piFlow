@@ -5,7 +5,6 @@ import comfy
 import comfy.sampler_helpers
 import comfy.patcher_extension
 import comfy.model_patcher
-from typing import Optional
 from comfy.samplers import Sampler, CFGGuider, finalize_default_conds, get_area_and_mult, cond_cat
 from tqdm.auto import trange
 from .model_base import BasePiFlow
@@ -212,47 +211,6 @@ class _PiFlowSampler(Sampler):
 
         return sigmas_dst, m
 
-    def policy_rollout(
-            self,
-            x_t_start: torch.Tensor,  # (B, C, *, H, W)
-            sigma_t_start: torch.Tensor,  # (B, 1, *, 1, 1)
-            raw_t_start: torch.Tensor,  # (B, )
-            raw_t_end: torch.Tensor,  # (B, )
-            policy: BasePolicy,
-            denoise_mask: Optional[torch.Tensor] = None,
-            latent_image: Optional[torch.Tensor] = None):
-        num_batches = x_t_start.size(0)
-        ndim = x_t_start.dim()
-        raw_t_start = raw_t_start.reshape(num_batches, *((ndim - 1) * [1]))
-        raw_t_end = raw_t_end.reshape(num_batches, *((ndim - 1) * [1]))
-
-        delta_raw_t = raw_t_start - raw_t_end
-        num_substeps = (delta_raw_t * self.substeps).round().to(torch.long).clamp(min=1)
-        substep_size = delta_raw_t / num_substeps
-        max_num_substeps = num_substeps.max()
-
-        raw_t = raw_t_start
-        sigma_t = sigma_t_start
-        x_t = x_t_start
-
-        for substep_id in range(max_num_substeps.item()):
-            u = policy.pi(x_t, sigma_t)
-            if denoise_mask is not None and latent_image is not None:
-                u_from_latent_image = (x_t - latent_image) / sigma_t
-                u = u * denoise_mask + u_from_latent_image * (1 - denoise_mask)
-
-            raw_t_minus = (raw_t - substep_size).clamp(min=0)
-            sigma_t_minus = self.model_sampling.warp_t(raw_t_minus)
-            x_t_minus = x_t + u * (sigma_t_minus - sigma_t)
-
-            active_mask = num_substeps > substep_id
-            x_t = torch.where(active_mask, x_t_minus, x_t)
-            sigma_t = torch.where(active_mask, sigma_t_minus, sigma_t)
-            raw_t = torch.where(active_mask, raw_t_minus, raw_t)
-
-        x_t_end = x_t
-        return x_t_end
-
     def sample(self, model_wrap, sigmas, extra_args, callback, noise,
                latent_image=None, denoise_mask=None, disable_pbar=False):
         noise = self.model_sampling.unpatchify(noise)
@@ -293,8 +251,9 @@ class _PiFlowSampler(Sampler):
             if hasattr(policy, "temperature_") and step_id != nfe - 1:
                 policy.temperature_(self.gm_temperature)
 
-            x_t_dst = self.policy_rollout(
-                x_t_src, sigma_t_src, raw_t_src, raw_t_dst, policy,
+            x_t_dst, _, _ = policy.integrate(
+                x_t_src, sigma_t_src, raw_t_src, raw_t_dst,
+                self.model_sampling, total_substeps=self.substeps,
                 denoise_mask=denoise_mask, latent_image=latent_image)
 
             noise = torch.randn(

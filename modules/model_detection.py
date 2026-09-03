@@ -59,7 +59,10 @@ def _infer_gm_logstd_cfg(sd: dict, prefix: str):
 
 def detect_policy_config(metadata=None):
     if metadata is not None and 'policy_config' in metadata:
-        return json.loads(metadata["policy_config"])
+        policy_config = json.loads(metadata["policy_config"])
+        if policy_config.get("mode") == "polynomial":
+            raise ValueError("DX polynomial policies are not supported by ComfyUI-piFlow.")
+        return policy_config
     return {}
 
 

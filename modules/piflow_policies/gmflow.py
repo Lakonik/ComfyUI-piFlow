@@ -1,9 +1,10 @@
-# Copyright (c) 2025 Hansheng Chen
+# Copyright (c) 2026 Hansheng Chen
 
 import math
+from typing import Dict
+
 import torch
 
-from typing import Dict
 from .base import BasePolicy
 
 
@@ -63,7 +64,7 @@ class GMFlowPolicy(BasePolicy):
         x_t_src (torch.Tensor): The initial noisy sample. Shape (B, C, H, W) or (B, C, T, H, W).
         sigma_t_src (torch.Tensor): The initial noise level. Shape (B,).
         checkpointing (bool): Whether to use gradient checkpointing to save memory. Defaults to True.
-        eps (float): A small value to avoid numerical issues. Defaults to 1e-4.
+        eps (float): A small value to avoid numerical issues. Defaults to 1e-6.
     """
 
     def __init__(
@@ -72,7 +73,9 @@ class GMFlowPolicy(BasePolicy):
             x_t_src: torch.Tensor,
             sigma_t_src: torch.Tensor,
             checkpointing: bool = True,
-            eps: float = 1e-4):
+            eps: float = 1e-6):
+        assert x_t_src.dim() in [4, 5], f'Invalid x_t_src shape: {x_t_src.shape}. Expected 4D or 5D tensor.'
+
         self.x_t_src = x_t_src
         self.ndim = x_t_src.dim()
         self.checkpointing = checkpointing

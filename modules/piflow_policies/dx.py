@@ -1,4 +1,4 @@
-# Copyright (c) 2025 Hansheng Chen
+# Copyright (c) 2026 Hansheng Chen
 
 import torch
 from .base import BasePolicy
@@ -42,8 +42,12 @@ class DXPolicy(BasePolicy):
         self.raw_t_dst = (self.raw_t_src - segment_size).clamp(min=0)
         self.segment_size = (self.raw_t_src - self.raw_t_dst).clamp(min=eps)
 
-        self.denoising_output_x_0 = self._u_to_x_0(
+        denoising_output_x_0 = self._u_to_x_0(
             denoising_output, self.x_t_src, self.sigma_t_src)
+        if mode == 'polynomial':
+            # use diff for higher-order coefficients to satisfy zero initialization
+            denoising_output_x_0[:, 1:] = denoising_output_x_0[:, 1:] - denoising_output_x_0[:, :1]
+        self.denoising_output_x_0 = denoising_output_x_0
 
     def _unwarp_t(self, sigma_t):
         return sigma_t / (self.shift + (1 - self.shift) * sigma_t)
