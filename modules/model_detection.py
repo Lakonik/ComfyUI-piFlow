@@ -4,14 +4,6 @@ import torch
 from typing import Dict
 from comfy.model_detection import detect_unet_config
 from .supported_models import models
-try:
-    from comfy.utils import detect_layer_quantization
-except ImportError:
-    detect_layer_quantization = None
-try:
-    from comfy.model_detection import detect_layer_quantization as legacy_detect_layer_quantization
-except ImportError:
-    legacy_detect_layer_quantization = None
 
 
 def _has_gm_heads(sd: Dict[str, object], prefix: str) -> bool:
@@ -69,24 +61,6 @@ def detect_policy_config(metadata=None):
     if metadata is not None and 'policy_config' in metadata:
         return json.loads(metadata["policy_config"])
     return {}
-
-
-def apply_quant_config(model_config, state_dict, key_prefix, metadata=None):
-    if detect_layer_quantization is not None:
-        # Detect per-layer quantization (mixed precision)
-        quant_config = detect_layer_quantization(state_dict, key_prefix)
-        if quant_config:
-            model_config.quant_config = quant_config
-            logging.info("Detected mixed precision quantization")
-
-    elif legacy_detect_layer_quantization is not None:
-        # Detect per-layer quantization (mixed precision)
-        layer_quant_config = legacy_detect_layer_quantization(metadata)
-        if layer_quant_config:
-            model_config.layer_quant_config = layer_quant_config
-            logging.info(f"Detected mixed precision quantization: {len(layer_quant_config)} layers quantized")
-
-    return model_config
 
 
 def detect_piflow_config(state_dict, key_prefix, metadata=None):
@@ -164,7 +138,7 @@ def model_config_from_piflow(state_dict, key_prefix, metadata=None):
         else:
             model_config.optimizations["fp8"] = True
 
-    return apply_quant_config(model_config, state_dict, key_prefix, metadata)
+    return model_config
 
 
 def detect_asymflow_config(state_dict, key_prefix, metadata=None):
@@ -212,4 +186,4 @@ def model_config_from_asymflow(state_dict, key_prefix, metadata=None):
     if model_config is None:
         return None
 
-    return apply_quant_config(model_config, state_dict, key_prefix, metadata)
+    return model_config
