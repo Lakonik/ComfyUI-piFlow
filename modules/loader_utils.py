@@ -520,3 +520,86 @@ def load_lakonlab_model_from_gguf(
     )
 
     return model
+
+
+def load_adapter_module(module, sd):
+    """Load adapter tensors into a freshly built module in their own format.
+
+    A mixed-precision Linear keeps a dense weight (and its bias) in the adapter's dtype instead of its compute
+    dtype, or loads a ComfyUI quantized weight as stored.
+    """
+    for name, m in module.named_modules():
+        prefix = name + "." if name else ""
+        if hasattr(m, "factory_kwargs") and prefix + "weight" in sd and prefix + "comfy_quant" not in sd:
+            dtype = sd[prefix + "weight"].dtype
+            m.factory_kwargs = dict(m.factory_kwargs, dtype=dtype)
+            if m.bias is not None:
+                m.bias = torch.nn.Parameter(torch.empty_like(m.bias, dtype=dtype), requires_grad=False)
+    missing, unexpected = module.load_state_dict(sd, strict=False)
+    if len(missing) > 0 or len(unexpected) > 0:
+        raise ValueError("Adapter tensors do not match the module: missing {}, unexpected {}".format(missing, unexpected))
+
+
+def patch_model_with_adapter(model, adapter_sd, key_mapping, adapter_strength=1.0):
+    """Clone a ComfyUI-native model and patch an adapter onto it.
+
+    The adapter's non-LoRA tensors replace base tensors as object patches of the clone, in the adapter's own format:
+    each Linear whose weight is replaced is rebuilt from its own class and loaded by ComfyUI's layer loader (dense, or
+    any ComfyUI quantized format the adapter stores), and other tensors are swapped in as they are. Earlier weight
+    patches on replaced tensors (e.g. from LoRA nodes) are dropped. LoRA tensors go through ComfyUI's LoRA patching.
+    """
+    full_sd, lora_sd = split_adapter_state_dict(adapter_sd, model.model.model_config.unet_config["image_model"])
+    diffusion_model = model.model.diffusion_model
+
+    sd = {}
+    for key, value in full_sd.items():
+        if key in key_mapping:
+            convert_diffusers_to_comfyui(sd, value, key_mapping[key])
+        else:
+            layer, postfix = _quantization_layer_from_key(key)
+            if postfix is not None:
+                key = _mapped_weight_key(key_mapping, layer + ".weight")[:-len("weight")] + postfix
+            sd[key] = value
+
+    model_sd = diffusion_model.state_dict()
+
+    def in_model(key):
+        layer, postfix = _quantization_layer_from_key(key)
+        return (key if postfix is None else layer + ".weight") in model_sd
+
+    ignored = [k for k in sd if not in_model(k)]
+    if len(ignored) > 0:
+        logging.warning("Adapter tensors not in the model, ignored: {}".format(ignored))
+    sd = {k: v for k, v in sd.items() if in_model(k)}
+    for key, value in sd.items():
+        if _quantization_layer_from_key(key)[1] is None and value.shape != model_sd[key].shape:
+            raise ValueError("Adapter tensor {} has shape {}, expected {}. Partial replacement is not supported.".format(
+                key, tuple(value.shape), tuple(model_sd[key].shape)))
+
+    model = model.clone()
+    replaced = set()
+    linears = {key[:-len(".weight")] for key in sd if key.endswith(".weight")
+               and hasattr(comfy.utils.get_attr(diffusion_model, key[:-len(".weight")]), "in_features")}
+    for name in linears:
+        old = comfy.utils.get_attr(diffusion_model, name)
+        layer_sd = {k[len(name) + 1:]: sd.pop(k) for k in list(sd) if k.rpartition(".")[0] == name}
+        if "bias" not in layer_sd and old.bias is not None:
+            layer_sd["bias"] = old.bias
+        new = type(old)(old.in_features, old.out_features, bias=old.bias is not None, device=model.offload_device,
+                        dtype=None if "comfy_quant" in layer_sd else layer_sd["weight"].dtype)
+        load_adapter_module(new, layer_sd)
+        model.add_object_patch("diffusion_model." + name, new)
+        replaced.update("diffusion_model.{}.{}".format(name, k) for k in ("weight", "bias"))
+    for key, value in sd.items():
+        old = comfy.utils.get_attr(diffusion_model, key)
+        if isinstance(old, torch.nn.Parameter):
+            value = torch.nn.Parameter(value, requires_grad=False)
+        model.add_object_patch("diffusion_model." + key, value)
+        replaced.add("diffusion_model." + key)
+
+    for key in replaced:
+        model.patches.pop(key, None)
+
+    if len(lora_sd) > 0:
+        model, _ = comfy.sd.load_lora_for_models(model, None, lora_sd, adapter_strength, 0)
+    return model

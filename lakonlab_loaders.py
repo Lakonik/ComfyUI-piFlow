@@ -6,6 +6,7 @@ import importlib.machinery
 from dataclasses import dataclass
 import torch
 import comfy
+import comfy.lora
 import folder_paths
 from comfy.utils import swap_scale_shift
 from .modules.model_detection import model_config_from_piflow, model_config_from_asymflow
@@ -13,7 +14,11 @@ from .modules.loader_utils import (
     flux_norm_target_suffix,
     load_lakonlab_model_from_files,
     load_lakonlab_model_from_gguf,
+    load_adapter_module,
+    patch_model_with_adapter,
 )
+from .modules.architectures.dwd_head import get_dwd_pixels
+from .modules.architectures.minimax_h3_dwd import patch_minimax_h3_dwd
 
 
 old_flux_to_diffusers = comfy.utils.flux_to_diffusers
@@ -119,6 +124,104 @@ def flux_to_diffusers(mmdit_config, output_prefix=""):
 
 
 comfy.utils.flux_to_diffusers = flux_to_diffusers
+
+
+def minimax_h3_to_diffusers(dit_config, output_prefix=""):
+    inner_dim = dit_config["num_attention_heads"] * dit_config["attention_head_dim"]
+    key_map = {}
+
+    def add_block_keys(prefix_from, prefix_to, block_map):
+        # q/k/v packed into attn.qkv_proj.weight
+        qkv = f"{prefix_to}.attn.qkv_proj.weight"
+        key_map[f"{prefix_from}.attn.to_q.weight"] = (qkv, (0, 0, inner_dim))
+        key_map[f"{prefix_from}.attn.to_k.weight"] = (qkv, (0, inner_dim, inner_dim))
+        key_map[f"{prefix_from}.attn.to_v.weight"] = (qkv, (0, inner_dim * 2, inner_dim))
+        # mlp.fc1 stores the two swiglu halves of ff.net.0.proj in swapped order
+        key_map[f"{prefix_from}.ff.net.0.proj.weight"] = (f"{prefix_to}.mlp.fc1.weight", None, swap_scale_shift)
+        for k_from, k_to in block_map.items():
+            key_map[f"{prefix_from}.{k_from}"] = f"{prefix_to}.{k_to}"
+
+    refiner_block_map = {
+        "norm1.weight": "norm1.weight",
+        "norm2.weight": "norm2.weight",
+        "attn.norm_q.weight": "attn.q_norm.weight",
+        "attn.norm_k.weight": "attn.k_norm.weight",
+        "attn.to_out.0.weight": "attn.out_proj.weight",
+        "ff.net.2.weight": "mlp.fc2.weight",
+    }
+    block_map = {
+        **refiner_block_map,
+        "adaln_proj.linear.weight": "adaln_proj.linear.weight",
+        "adaln_proj.linear.bias": "adaln_proj.linear.bias",
+        "adaln_proj.folded_bias": "adaln_proj.linear.bias",  # the pruned base checkpoint's name for the bias
+    }
+
+    # --- token refiner: diffusers token_refiner.refiner_blocks.{i} -> comfy token_refiner.blocks.{i} ---
+    for index in range(dit_config.get("token_refiner_num_layers", 0)):
+        add_block_keys(
+            f"token_refiner.refiner_blocks.{index}", f"{output_prefix}token_refiner.blocks.{index}", refiner_block_map)
+
+    # --- blocks: diffusers transformer_blocks.{i} -> comfy blocks.{i} ---
+    for index in range(dit_config.get("num_layers", 0)):
+        add_block_keys(f"transformer_blocks.{index}", f"{output_prefix}blocks.{index}", block_map)
+
+    # --- top-level modules ---
+    MAP_BASIC = {
+        ("video_patch_proj.weight", "proj_in.weight"),
+        ("video_patch_proj.bias", "proj_in.bias"),
+        ("audio_patch_proj.weight", "audio_proj_in.weight"),
+        ("audio_patch_proj.bias", "audio_proj_in.bias"),
+        ("condition_proj.weight", "context_embedder.weight"),
+        ("condition_proj.bias", "context_embedder.bias"),
+        ("adaln_t_table", "time_embedder.table"),
+        ("token_refiner.final_norm.weight", "token_refiner.final_norm.weight"),
+        ("final_layer.norm.weight", "norm_out.norm.weight"),
+        ("final_layer.adaln_proj.linear.weight", "norm_out.linear.weight"),
+        ("final_layer.adaln_proj.linear.bias", "norm_out.linear.bias"),
+        ("final_layer.adaln_proj.linear.bias", "norm_out.folded_bias"),
+        ("final_layer.video_out.weight", "proj_out.weight"),
+        ("final_layer.video_out.bias", "proj_out.bias"),
+        ("final_layer.audio_out.weight", "audio_proj_out.weight"),
+        ("final_layer.audio_out.bias", "audio_proj_out.bias"),
+    }
+
+    for comfy_k, diffusers_k in MAP_BASIC:
+        key_map[diffusers_k] = f"{output_prefix}{comfy_k}"
+
+    return key_map
+
+
+ADAPTER_KEY_RULES = {
+    "minimax_h3": minimax_h3_to_diffusers,
+    "minimax_h3_image": minimax_h3_to_diffusers,
+}
+
+# DWD heads are new modules: each model installs its own
+DWD_HEAD_PATCHES = {
+    "minimax_h3": patch_minimax_h3_dwd,
+}
+
+
+old_model_lora_keys_unet = comfy.lora.model_lora_keys_unet
+
+
+def model_lora_keys_unet(model, key_map={}):
+    key_map = old_model_lora_keys_unet(model, key_map)
+    key_rule = ADAPTER_KEY_RULES.get(model.model_config.unet_config.get("image_model"))
+    if key_rule is not None:  # Diffusers lora of the models with a LakonLab key rule
+        diffusers_keys = key_rule(model.model_config.unet_config, output_prefix="diffusion_model.")
+        for k in diffusers_keys:
+            if k.endswith(".weight"):
+                to = diffusers_keys[k]
+                key_lora = k[:-len(".weight")]
+                key_map["diffusion_model.{}".format(key_lora)] = to
+                key_map["transformer.{}".format(key_lora)] = to
+                key_map["lycoris_{}".format(key_lora.replace(".", "_"))] = to
+                key_map[key_lora] = to
+    return key_map
+
+
+comfy.lora.model_lora_keys_unet = model_lora_keys_unet
 
 
 def import_comfyui_gguf_nodes():
@@ -277,6 +380,60 @@ class AsymFlowLoader:
             error_label=registry.error_label)
 
         return (model,)
+
+
+class LakonLabAdapterLoader:
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "model": ("MODEL",),
+                "adapter_name": (folder_paths.get_filename_list("loras"),),
+                "adapter_strength": ("FLOAT", {"default": 1.0, "min": -100.0, "max": 100.0, "step": 0.01}),
+            }
+        }
+
+    RETURN_TYPES = ("MODEL",)
+    FUNCTION = "load_adapter"
+
+    CATEGORY = "LakonLab"
+
+    def load_adapter(self, model, adapter_name, adapter_strength):
+        image_model = model.model.model_config.unet_config.get("image_model")
+        if image_model not in ADAPTER_KEY_RULES:
+            raise ValueError("LakonLab adapters are not supported on {} models".format(image_model))
+        key_mapping = ADAPTER_KEY_RULES[image_model](model.model.model_config.unet_config)
+        adapter_path = folder_paths.get_full_path_or_raise("loras", adapter_name)
+        adapter_sd = comfy.utils.load_torch_file(adapter_path)
+        dwd_sd = {k: adapter_sd.pop(k) for k in list(adapter_sd) if k.startswith("dwd_")}
+        model = patch_model_with_adapter(model, adapter_sd, key_mapping, adapter_strength)
+        if len(dwd_sd) > 0:
+            if image_model not in DWD_HEAD_PATCHES:
+                raise ValueError("LakonLab DWD heads are not supported on {} models".format(image_model))
+            model = DWD_HEAD_PATCHES[image_model](model, dwd_sd, load_adapter_module)
+        return (model,)
+
+
+class DWDDecode:
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "samples": ("LATENT",),
+            }
+        }
+
+    RETURN_TYPES = ("IMAGE",)
+    FUNCTION = "decode"
+
+    CATEGORY = "LakonLab"
+    DESCRIPTION = ("The video pixels a LakonLab DWD adapter decoded at the last step of the sampling run that returned "
+                   "samples, in place of a VAE decode.")
+
+    def decode(self, samples):
+        return (get_dwd_pixels(samples),)
 
 
 if _nodes is not None:
