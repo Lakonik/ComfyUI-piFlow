@@ -1,6 +1,14 @@
-# ComfyUI Nodes for AsymFlow and pi-Flow
+# ComfyUI Nodes for pi-H3, AsymFlow, and pi-Flow
 
 **ComfyUI-piFlow** is a collection of custom nodes for [ComfyUI](https://github.com/comfyanonymous/ComfyUI) that implement the following model families:
+- **pi-H3**
+  <br>
+  The fastest MiniMax H3. 2–4 steps, no VAE decoder.
+  <br>
+  **[[Workflows](docs/piH3.md)]**
+
+  <img src="https://hanshengchen.com/blog/pi-h3/teaser.jpg" width=250 alt=""/>
+
 - **AsymFlow**
   <br>
   Generates realistic images in pixel space. 
@@ -19,9 +27,9 @@
 
 ## Installation
 
-**This extension requires ComfyUI version 0.23.0 or higher**. Older ComfyUI releases are no longer supported.
+**This extension requires ComfyUI version 0.45.0 or higher**. Older ComfyUI releases are no longer supported.
 
-**Please uninstall any non-official AsymFlow or pi-Flow extensions before installing this extension**, as they may cause compatibility issues.
+**Please uninstall any non-official pi-H3, AsymFlow, or pi-Flow extensions before installing this extension**, as they may cause compatibility issues.
 
 ### ComfyUI Manager
 
@@ -40,6 +48,10 @@ git clone https://github.com/Lakonik/ComfyUI-piFlow
 This code repository is licensed under the Apache-2.0 License. Models used in the workflows are subject to their own respective licenses.
 
 ## Changelog
+
+- **v1.4.0** (2026-11-21)
+  - Add pi-H3 nodes and workflows for MiniMax H3 (2-step and 4-step, with and without DWD).
+  - Require ComfyUI v0.45.0 or newer.
 
 - **v1.3.6** (2026-09-03)
   - Improve model loading and reuse for pi-Flow and AsymFlow workflows ([#35](https://github.com/Lakonik/ComfyUI-piFlow/issues/35)).

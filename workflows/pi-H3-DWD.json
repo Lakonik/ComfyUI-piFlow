@@ -1,15 +1,15 @@
 {
-  "id": "b2fc01e7-f86e-408b-a7a9-382790df829b",
+  "id": "ce5c0ef8-9b93-434c-a3a8-75831e754d06",
   "revision": 0,
-  "last_node_id": 19,
-  "last_link_id": 21,
+  "last_node_id": 40,
+  "last_link_id": 50,
   "nodes": [
     {
       "id": 1,
       "type": "UNETLoader",
       "pos": [
-        0,
-        0
+        30,
+        30
       ],
       "size": [
         270,
@@ -44,7 +44,7 @@
           "name": "MODEL",
           "type": "MODEL",
           "links": [
-            18
+            23
           ]
         }
       ],
@@ -54,80 +54,14 @@
       "widgets_values": [
         "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
         "default"
-      ],
-      "widgets_values_named": {
-        "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
-        "weight_dtype": "default"
-      }
-    },
-    {
-      "id": 2,
-      "type": "Load LakonLab Adapter",
-      "pos": [
-        0,
-        324
-      ],
-      "size": [
-        270,
-        82
-      ],
-      "flags": {},
-      "order": 9,
-      "mode": 0,
-      "inputs": [
-        {
-          "localized_name": "model",
-          "name": "model",
-          "type": "MODEL",
-          "link": 1
-        },
-        {
-          "localized_name": "adapter_name",
-          "name": "adapter_name",
-          "type": "COMBO",
-          "widget": {
-            "name": "adapter_name"
-          },
-          "link": null
-        },
-        {
-          "localized_name": "adapter_strength",
-          "name": "adapter_strength",
-          "type": "FLOAT",
-          "widget": {
-            "name": "adapter_strength"
-          },
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "localized_name": "MODEL",
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            19
-          ]
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "Load LakonLab Adapter"
-      },
-      "widgets_values": [
-        "pi_h3_2step_dwd_adapter.safetensors",
-        1
-      ],
-      "widgets_values_named": {
-        "adapter_name": "pi_h3_2step_dwd_adapter.safetensors",
-        "adapter_strength": 1
-      }
+      ]
     },
     {
       "id": 3,
       "type": "CLIPLoader",
       "pos": [
-        0,
-        648
+        30,
+        558
       ],
       "size": [
         270,
@@ -183,19 +117,14 @@
         "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
         "minimax",
         "default"
-      ],
-      "widgets_values_named": {
-        "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
-        "type": "minimax",
-        "device": "default"
-      }
+      ]
     },
     {
       "id": 4,
       "type": "VAELoader",
       "pos": [
-        0,
-        834
+        30,
+        734
       ],
       "size": [
         270,
@@ -225,23 +154,20 @@
           ]
         }
       ],
-      "title": "Video VAE (keyframe encoding)",
+      "title": "Load VAE (video)",
       "properties": {
         "Node name for S&R": "VAELoader"
       },
       "widgets_values": [
         "minimax_h3_video_vae_int8_convrot.safetensors"
-      ],
-      "widgets_values_named": {
-        "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
-      }
+      ]
     },
     {
       "id": 5,
       "type": "VAELoader",
       "pos": [
-        0,
-        972
+        30,
+        862
       ],
       "size": [
         270,
@@ -267,34 +193,31 @@
           "name": "VAE",
           "type": "VAE",
           "links": [
-            14
+            19
           ]
         }
       ],
-      "title": "Audio VAE",
+      "title": "Load VAE (audio)",
       "properties": {
         "Node name for S&R": "VAELoader"
       },
       "widgets_values": [
         "minimax_h3_audio_vae_fp32.safetensors"
-      ],
-      "widgets_values_named": {
-        "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
-      }
+      ]
     },
     {
       "id": 6,
       "type": "MiniMaxH3ImageToVideo",
       "pos": [
-        480,
-        0
+        470,
+        448
       ],
       "size": [
         420,
         460
       ],
       "flags": {},
-      "order": 8,
+      "order": 15,
       "mode": 0,
       "inputs": [
         {
@@ -314,14 +237,14 @@
           "name": "first_frame",
           "shape": 7,
           "type": "IMAGE",
-          "link": null
+          "link": 7
         },
         {
           "localized_name": "last_frame",
           "name": "last_frame",
           "shape": 7,
           "type": "IMAGE",
-          "link": null
+          "link": 8
         },
         {
           "localized_name": "prompt",
@@ -339,7 +262,7 @@
           "widget": {
             "name": "width"
           },
-          "link": null
+          "link": 4
         },
         {
           "localized_name": "height",
@@ -348,7 +271,7 @@
           "widget": {
             "name": "height"
           },
-          "link": null
+          "link": 5
         },
         {
           "localized_name": "length",
@@ -357,7 +280,7 @@
           "widget": {
             "name": "length"
           },
-          "link": null
+          "link": 49
         }
       ],
       "outputs": [
@@ -366,7 +289,7 @@
           "name": "positive",
           "type": "CONDITIONING",
           "links": [
-            6
+            11
           ]
         },
         {
@@ -374,7 +297,7 @@
           "name": "LATENT",
           "type": "LATENT",
           "links": [
-            11
+            16
           ]
         }
       ],
@@ -382,24 +305,18 @@
         "Node name for S&R": "MiniMaxH3ImageToVideo"
       },
       "widgets_values": [
-        "integrated_multimodal_description: [Shot 1] Live-action, handheld smartphone selfie video, a close medium shot with the camera held at arm's length slightly above eye level, a young man in an orange beanie and a green rain jacket fills the left 40 percent of the frame and looks straight into the lens. Behind him, a lakeside campsite glows at golden hour, with a yellow tent at the right edge of the background and a dark treeline above the shore. The camera shakes slightly. The young man with a cheerful, breathy voice (S1) says: <d>[English] Day two of camping, and the vibes are immaculate.</d> While he speaks without noticing, a large brown bear steps out of the treeline in the right background and walks along the shore toward the camera, growing larger in the frame. It stops directly behind him and lowers its huge head onto his shoulder nearest the right edge of the frame, so that its snout reaches into the right half of the frame beside his ear. His smile freezes in place and his eyes slide sideways toward the bear without his head moving.\n\noverall_soundscape: Wind hisses across the lake while gravel crunches under heavy, slow paws. The bear lets out a long, warm huff beside the microphone and his nylon jacket rustles as he goes rigid.\n\nnon_diegetic_music: N/A",
+        "integrated_multimodal_description: [Shot 1] Live-action, epic cinematic, a slow push-in through a dim, dusty server room overgrown with thick cobwebs, a single ancient computer monitor glowing at the center of the frame showing a progress bar stuck at \"99%\", a skeleton in an office chair slumped in front of it with one bony finger still on the mouse, dust drifting through a shaft of cold light. A deep, gravelly movie-trailer narrator (S1) says off-screen: <d>[English] In a world where your render outlived you...</d>\n\noverall_soundscape: A low electrical hum, the slow creak of the office chair, and a single cooling fan rattling and winding down.\n\nnon_diegetic_music: Ominous low brass and taiko drums build slowly.",
         1344,
         768,
         124
-      ],
-      "widgets_values_named": {
-        "prompt": "integrated_multimodal_description: [Shot 1] Live-action, handheld smartphone selfie video, a close medium shot with the camera held at arm's length slightly above eye level, a young man in an orange beanie and a green rain jacket fills the left 40 percent of the frame and looks straight into the lens. Behind him, a lakeside campsite glows at golden hour, with a yellow tent at the right edge of the background and a dark treeline above the shore. The camera shakes slightly. The young man with a cheerful, breathy voice (S1) says: <d>[English] Day two of camping, and the vibes are immaculate.</d> While he speaks without noticing, a large brown bear steps out of the treeline in the right background and walks along the shore toward the camera, growing larger in the frame. It stops directly behind him and lowers its huge head onto his shoulder nearest the right edge of the frame, so that its snout reaches into the right half of the frame beside his ear. His smile freezes in place and his eyes slide sideways toward the bear without his head moving.\n\noverall_soundscape: Wind hisses across the lake while gravel crunches under heavy, slow paws. The bear lets out a long, warm huff beside the microphone and his nylon jacket rustles as he goes rigid.\n\nnon_diegetic_music: N/A",
-        "width": 1344,
-        "height": 768,
-        "length": 124
-      }
+      ]
     },
     {
       "id": 7,
       "type": "KSamplerSelect",
       "pos": [
-        480,
-        750
+        970,
+        702
       ],
       "size": [
         270,
@@ -425,7 +342,7 @@
           "name": "SAMPLER",
           "type": "SAMPLER",
           "links": [
-            9
+            14
           ]
         }
       ],
@@ -434,31 +351,28 @@
       },
       "widgets_values": [
         "euler"
-      ],
-      "widgets_values_named": {
-        "sampler_name": "euler"
-      }
+      ]
     },
     {
       "id": 8,
       "type": "pi-Flow Scheduler",
       "pos": [
-        480,
-        540
+        970,
+        502
       ],
       "size": [
         281.62109375,
         130
       ],
       "flags": {},
-      "order": 11,
+      "order": 18,
       "mode": 0,
       "inputs": [
         {
           "localized_name": "model",
           "name": "model",
           "type": "MODEL",
-          "link": 20
+          "link": 9
         },
         {
           "localized_name": "steps",
@@ -467,7 +381,7 @@
           "widget": {
             "name": "steps"
           },
-          "link": null
+          "link": 43
         },
         {
           "localized_name": "min_raw_t",
@@ -485,7 +399,7 @@
           "widget": {
             "name": "max_raw_t"
           },
-          "link": null
+          "link": 44
         },
         {
           "localized_name": "final_step_size_scale",
@@ -503,7 +417,7 @@
           "name": "SIGMAS",
           "type": "SIGMAS",
           "links": [
-            10
+            15
           ]
         }
       ],
@@ -515,40 +429,34 @@
         0,
         0.93,
         0.6
-      ],
-      "widgets_values_named": {
-        "steps": 2,
-        "min_raw_t": 0,
-        "max_raw_t": 0.93,
-        "final_step_size_scale": 0.6
-      }
+      ]
     },
     {
       "id": 9,
       "type": "BasicGuider",
       "pos": [
-        480,
-        1050
+        970,
+        982
       ],
       "size": [
         159.568359375,
         46
       ],
       "flags": {},
-      "order": 12,
+      "order": 19,
       "mode": 0,
       "inputs": [
         {
           "localized_name": "model",
           "name": "model",
           "type": "MODEL",
-          "link": 21
+          "link": 10
         },
         {
           "localized_name": "conditioning",
           "name": "conditioning",
           "type": "CONDITIONING",
-          "link": 6
+          "link": 11
         }
       ],
       "outputs": [
@@ -557,7 +465,7 @@
           "name": "GUIDER",
           "type": "GUIDER",
           "links": [
-            8
+            13
           ]
         }
       ],
@@ -569,8 +477,8 @@
       "id": 10,
       "type": "RandomNoise",
       "pos": [
-        480,
-        888
+        970,
+        830
       ],
       "size": [
         270,
@@ -596,7 +504,7 @@
           "name": "NOISE",
           "type": "NOISE",
           "links": [
-            7
+            12
           ]
         }
       ],
@@ -605,57 +513,53 @@
       },
       "widgets_values": [
         42,
-        "fixed"
-      ],
-      "widgets_values_named": {
-        "noise_seed": 42,
-        "control_after_generate": "fixed"
-      }
+        "randomize"
+      ]
     },
     {
       "id": 11,
       "type": "SamplerCustomAdvanced",
       "pos": [
-        980,
-        0
+        1400,
+        30
       ],
       "size": [
-        212.3638671875,
-        106
+        420,
+        520
       ],
       "flags": {},
-      "order": 13,
+      "order": 20,
       "mode": 0,
       "inputs": [
         {
           "localized_name": "noise",
           "name": "noise",
           "type": "NOISE",
-          "link": 7
+          "link": 12
         },
         {
           "localized_name": "guider",
           "name": "guider",
           "type": "GUIDER",
-          "link": 8
+          "link": 13
         },
         {
           "localized_name": "sampler",
           "name": "sampler",
           "type": "SAMPLER",
-          "link": 9
+          "link": 14
         },
         {
           "localized_name": "sigmas",
           "name": "sigmas",
           "type": "SIGMAS",
-          "link": 10
+          "link": 15
         },
         {
           "localized_name": "latent_image",
           "name": "latent_image",
           "type": "LATENT",
-          "link": 11
+          "link": 16
         }
       ],
       "outputs": [
@@ -664,8 +568,8 @@
           "name": "output",
           "type": "LATENT",
           "links": [
-            12,
-            13
+            17,
+            18
           ]
         },
         {
@@ -683,22 +587,22 @@
       "id": 12,
       "type": "DWD Decode",
       "pos": [
-        1600,
-        0
+        1400,
+        620
       ],
       "size": [
         140,
         26
       ],
       "flags": {},
-      "order": 14,
+      "order": 21,
       "mode": 0,
       "inputs": [
         {
           "localized_name": "samples",
           "name": "samples",
           "type": "LATENT",
-          "link": 12
+          "link": 17
         }
       ],
       "outputs": [
@@ -707,7 +611,7 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            15
+            20
           ]
         }
       ],
@@ -719,28 +623,28 @@
       "id": 13,
       "type": "VAEDecodeAudio",
       "pos": [
-        1600,
-        106
+        1400,
+        716
       ],
       "size": [
         164.2388671875,
         46
       ],
       "flags": {},
-      "order": 15,
+      "order": 22,
       "mode": 0,
       "inputs": [
         {
           "localized_name": "samples",
           "name": "samples",
           "type": "LATENT",
-          "link": 13
+          "link": 18
         },
         {
           "localized_name": "vae",
           "name": "vae",
           "type": "VAE",
-          "link": 14
+          "link": 19
         }
       ],
       "outputs": [
@@ -749,7 +653,7 @@
           "name": "AUDIO",
           "type": "AUDIO",
           "links": [
-            16
+            21
           ]
         }
       ],
@@ -761,29 +665,29 @@
       "id": 14,
       "type": "CreateVideo",
       "pos": [
-        1600,
-        232
+        1400,
+        832
       ],
       "size": [
         284.158203125,
         174
       ],
       "flags": {},
-      "order": 16,
+      "order": 23,
       "mode": 0,
       "inputs": [
         {
           "localized_name": "images",
           "name": "images",
           "type": "IMAGE",
-          "link": 15
+          "link": 20
         },
         {
           "localized_name": "audio",
           "name": "audio",
           "shape": 7,
           "type": "AUDIO",
-          "link": 16
+          "link": 21
         },
         {
           "localized_name": "fps",
@@ -841,7 +745,7 @@
           "name": "VIDEO",
           "type": "VIDEO",
           "links": [
-            17
+            22
           ]
         }
       ],
@@ -854,35 +758,28 @@
         "sRGB",
         "auto",
         "none"
-      ],
-      "widgets_values_named": {
-        "fps": 24,
-        "bit_depth": "auto",
-        "color_space": "sRGB",
-        "chroma_subsampling": "auto",
-        "codec": "none"
-      }
+      ]
     },
     {
       "id": 15,
       "type": "SaveVideo",
       "pos": [
-        2000,
-        0
+        1900,
+        30
       ],
       "size": [
-        270,
-        106
+        420,
+        520
       ],
       "flags": {},
-      "order": 17,
+      "order": 24,
       "mode": 0,
       "inputs": [
         {
           "localized_name": "video",
           "name": "video",
           "type": "VIDEO",
-          "link": 17
+          "link": 22
         },
         {
           "localized_name": "filename_prefix",
@@ -932,38 +829,32 @@
       ],
       "properties": {},
       "widgets_values": [
-        "pih3/pi_h3_dwd",
+        "video/pi-H3-DWD",
         "auto",
         "auto",
         "auto"
-      ],
-      "widgets_values_named": {
-        "filename_prefix": "pih3/pi_h3_dwd",
-        "format": "auto",
-        "format.codec": "auto",
-        "codec": "auto"
-      }
+      ]
     },
     {
       "id": 17,
       "type": "LoraLoaderModelOnly",
       "pos": [
-        0,
-        162
+        30,
+        182
       ],
       "size": [
         270,
         82
       ],
       "flags": {},
-      "order": 7,
+      "order": 11,
       "mode": 4,
       "inputs": [
         {
           "localized_name": "model",
           "name": "model",
           "type": "MODEL",
-          "link": 18
+          "link": 23
         },
         {
           "localized_name": "lora_name",
@@ -990,70 +881,39 @@
           "name": "MODEL",
           "type": "MODEL",
           "links": [
-            1
+            42
           ]
         }
       ],
-      "title": "Optional H3 LoRA (bypassed)",
+      "title": "Load LoRA (optional)",
       "properties": {
         "Node name for S&R": "LoraLoaderModelOnly"
       },
       "widgets_values": [
         "your_h3_lora.safetensors",
         1
-      ],
-      "widgets_values_named": {
-        "lora_name": "your_h3_lora.safetensors",
-        "strength_model": 1
-      }
-    },
-    {
-      "id": 18,
-      "type": "Note",
-      "pos": [
-        980,
-        186
-      ],
-      "size": [
-        540,
-        300
-      ],
-      "flags": {},
-      "order": 6,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [],
-      "title": "pi-H3 settings",
-      "properties": {},
-      "widgets_values": [
-        "pi-H3 on the native MiniMax H3 model (sampled like a plain flow model, any ComfyUI sampler).\n\nLoad LakonLab Adapter: pi_h3_{2,4}step_adapter or pi_h3_{2,4}step_dwd_adapter.\npi-Flow Scheduler: steps = the adapter's step count, max_raw_t 0.93 (2-step) / 0.96 (4-step),\n  final_step_size_scale 0.6, min_raw_t 0. The video/audio shifts (default 12 / 3) are set by\n  ModelSamplingMiniMaxH3, whose model feeds both the scheduler and the guider.\n\nDWD adapters: DWD Decode gives the video pixels (connect the sampler's 'output', not 'denoised_output').\nNon-DWD adapters: replace DWD Decode with VAE Decode (video VAE) on the sampler output.\n\nLoRAs go before Load LakonLab Adapter (enable the bypassed node). Earlier LoRA patches on the\nweights the adapter replaces are dropped."
-      ],
-      "widgets_values_named": {
-        "text": "pi-H3 on the native MiniMax H3 model (sampled like a plain flow model, any ComfyUI sampler).\n\nLoad LakonLab Adapter: pi_h3_{2,4}step_adapter or pi_h3_{2,4}step_dwd_adapter.\npi-Flow Scheduler: steps = the adapter's step count, max_raw_t 0.93 (2-step) / 0.96 (4-step),\n  final_step_size_scale 0.6, min_raw_t 0. The video/audio shifts (default 12 / 3) are set by\n  ModelSamplingMiniMaxH3, whose model feeds both the scheduler and the guider.\n\nDWD adapters: DWD Decode gives the video pixels (connect the sampler's 'output', not 'denoised_output').\nNon-DWD adapters: replace DWD Decode with VAE Decode (video VAE) on the sampler output.\n\nLoRAs go before Load LakonLab Adapter (enable the bypassed node). Earlier LoRA patches on the\nweights the adapter replaces are dropped."
-      },
-      "color": "#432",
-      "bgcolor": "#653"
+      ]
     },
     {
       "id": 19,
       "type": "MiniMaxH3SigmaShift",
       "pos": [
-        0,
-        486
+        970,
+        30
       ],
       "size": [
         277.2857421875,
         82
       ],
       "flags": {},
-      "order": 10,
+      "order": 16,
       "mode": 0,
       "inputs": [
         {
           "localized_name": "model",
           "name": "model",
           "type": "MODEL",
-          "link": 19
+          "link": 45
         },
         {
           "localized_name": "shift_video",
@@ -1080,8 +940,7 @@
           "name": "MODEL",
           "type": "MODEL",
           "links": [
-            20,
-            21
+            25
           ]
         }
       ],
@@ -1091,22 +950,651 @@
       "widgets_values": [
         12,
         3
+      ]
+    },
+    {
+      "id": 20,
+      "type": "BlockSparseAttention",
+      "pos": [
+        970,
+        182
       ],
-      "widgets_values_named": {
-        "shift_video": 12,
-        "shift_audio": 3
-      }
+      "size": [
+        270,
+        250
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "MODEL",
+          "link": 25
+        },
+        {
+          "localized_name": "method",
+          "name": "selection",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "widget": {
+            "name": "selection"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "tau",
+          "name": "selection.tau",
+          "type": "FLOAT",
+          "widget": {
+            "name": "selection.tau"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "start_percent",
+          "name": "start_percent",
+          "type": "FLOAT",
+          "widget": {
+            "name": "start_percent"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "end_percent",
+          "name": "end_percent",
+          "type": "FLOAT",
+          "widget": {
+            "name": "end_percent"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "dense_blocks",
+          "name": "dense_blocks",
+          "type": "STRING",
+          "widget": {
+            "name": "dense_blocks"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "min_tokens",
+          "name": "min_tokens",
+          "type": "INT",
+          "widget": {
+            "name": "min_tokens"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "extra_tokens",
+          "name": "extra_tokens",
+          "type": "INT",
+          "widget": {
+            "name": "extra_tokens"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "sink_conditioning",
+          "name": "sink_conditioning",
+          "type": "COMBO",
+          "widget": {
+            "name": "sink_conditioning"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "verbose",
+          "name": "verbose",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "verbose"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            9,
+            10
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BlockSparseAttention"
+      },
+      "widgets_values": [
+        "sol-attn",
+        1,
+        0,
+        1,
+        "0, 1",
+        12288,
+        256,
+        "exact_kv_and_rows",
+        false
+      ]
+    },
+    {
+      "id": 21,
+      "type": "LoadImage",
+      "pos": [
+        470,
+        1048
+      ],
+      "size": [
+        222.798828125,
+        320
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "COMBO",
+          "widget": {
+            "name": "image"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "choose file to upload",
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "widget": {
+            "name": "upload"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            26
+          ]
+        },
+        {
+          "localized_name": "MASK",
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "title": "First frame",
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ]
+    },
+    {
+      "id": 22,
+      "type": "LoadImage",
+      "pos": [
+        700,
+        1048
+      ],
+      "size": [
+        222.798828125,
+        320
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "COMBO",
+          "widget": {
+            "name": "image"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "choose file to upload",
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "widget": {
+            "name": "upload"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            29
+          ]
+        },
+        {
+          "localized_name": "MASK",
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "title": "Last frame",
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ]
+    },
+    {
+      "id": 23,
+      "type": "ImageScale",
+      "pos": [
+        470,
+        1438
+      ],
+      "size": [
+        270,
+        130
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 26
+        },
+        {
+          "localized_name": "upscale_method",
+          "name": "upscale_method",
+          "type": "COMBO",
+          "widget": {
+            "name": "upscale_method"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "width",
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": 27
+        },
+        {
+          "localized_name": "height",
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": 28
+        },
+        {
+          "localized_name": "crop",
+          "name": "crop",
+          "type": "COMBO",
+          "widget": {
+            "name": "crop"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            7
+          ]
+        }
+      ],
+      "title": "Resize first frame",
+      "properties": {
+        "Node name for S&R": "ImageScale"
+      },
+      "widgets_values": [
+        "lanczos",
+        512,
+        512,
+        "center"
+      ]
+    },
+    {
+      "id": 24,
+      "type": "ImageScale",
+      "pos": [
+        700,
+        1438
+      ],
+      "size": [
+        270,
+        130
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 29
+        },
+        {
+          "localized_name": "upscale_method",
+          "name": "upscale_method",
+          "type": "COMBO",
+          "widget": {
+            "name": "upscale_method"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "width",
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": 30
+        },
+        {
+          "localized_name": "height",
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": 31
+        },
+        {
+          "localized_name": "crop",
+          "name": "crop",
+          "type": "COMBO",
+          "widget": {
+            "name": "crop"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            8
+          ]
+        }
+      ],
+      "title": "Resize last frame",
+      "properties": {
+        "Node name for S&R": "ImageScale"
+      },
+      "widgets_values": [
+        "lanczos",
+        512,
+        512,
+        "center"
+      ]
+    },
+    {
+      "id": 30,
+      "type": "ResolutionSelector",
+      "pos": [
+        470,
+        30
+      ],
+      "size": [
+        270,
+        150
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "aspect_ratio",
+          "name": "aspect_ratio",
+          "type": "COMBO",
+          "widget": {
+            "name": "aspect_ratio"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "megapixels",
+          "name": "megapixels",
+          "type": "FLOAT",
+          "widget": {
+            "name": "megapixels"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "multiple",
+          "name": "multiple",
+          "type": "INT",
+          "widget": {
+            "name": "multiple"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "preview",
+          "name": "preview",
+          "shape": 7,
+          "type": "RESOLUTION_PREVIEW",
+          "widget": {
+            "name": "preview"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "width",
+          "name": "width",
+          "type": "INT",
+          "links": [
+            4,
+            27,
+            30
+          ]
+        },
+        {
+          "localized_name": "height",
+          "name": "height",
+          "type": "INT",
+          "links": [
+            5,
+            28,
+            31
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ResolutionSelector"
+      },
+      "widgets_values": [
+        "16:9 (Widescreen)",
+        0.97,
+        32
+      ]
+    },
+    {
+      "id": 33,
+      "type": "MarkdownNote",
+      "pos": [
+        -620,
+        0
+      ],
+      "size": [
+        600,
+        1298
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Model links",
+      "properties": {},
+      "widgets_values": [
+        "## pi-H3 FL2VA\n\nThis is an FL2VA (first-last-frame to video and audio) workflow. It generates a video with synchronized audio from a text prompt, optionally conditioned on a first frame, a last frame, or both.\n\n## Model links\n\n**Base model**\n\n- Download [minimax_h3_fl2va_pruned_int8_convrot.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors) and save it to\n<br>`models/diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors`\n\n**pi-H3 adapters**\n\n- Download [pi_h3_2step_dwd_adapter_int8_convrot.safetensors](https://huggingface.co/Lakonik/pi-H3/resolve/main/pi_h3_2step_dwd_adapter_int8_convrot.safetensors) and save it to \n<br>`models/loras/pi_h3_2step_dwd_adapter_int8_convrot.safetensors`\n\n  Alternative full-precision version: [pi_h3_2step_dwd_adapter/diffusion_pytorch_model.safetensors](https://huggingface.co/Lakonik/pi-H3/resolve/main/pi_h3_2step_dwd_adapter/diffusion_pytorch_model.safetensors), saved to `models/loras/pi_h3_2step_dwd_adapter.safetensors`\n\n- Download [pi_h3_4step_dwd_adapter_int8_convrot.safetensors](https://huggingface.co/Lakonik/pi-H3/resolve/main/pi_h3_4step_dwd_adapter_int8_convrot.safetensors) and save it to \n<br>`models/loras/pi_h3_4step_dwd_adapter_int8_convrot.safetensors`\n\n  Alternative full-precision version: [pi_h3_4step_dwd_adapter/diffusion_pytorch_model.safetensors](https://huggingface.co/Lakonik/pi-H3/resolve/main/pi_h3_4step_dwd_adapter/diffusion_pytorch_model.safetensors), saved to `models/loras/pi_h3_4step_dwd_adapter.safetensors`\n\n**Text encoder**\n\n- Download [qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors) and save it to\n<br>`models/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors`\n\n**VAE**\n\n- Download [minimax_h3_video_vae_int8_convrot.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_video_vae_int8_convrot.safetensors) and save it to\n<br>`models/vae/minimax_h3_video_vae_int8_convrot.safetensors`\n\n  The video VAE only encodes the first and last frames, and decodes the video in the workflow without DWD.\n\n- Download [minimax_h3_audio_vae_fp32.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_audio_vae_fp32.safetensors) and save it to\n<br>`models/vae/minimax_h3_audio_vae_fp32.safetensors`\n\n**Model Storage Location**\n\n```\n📂 ComfyUI/\n├── 📂 models/\n│   ├── 📂 diffusion_models/\n│   │   └── minimax_h3_fl2va_pruned_int8_convrot.safetensors\n│   ├── 📂 loras/\n│   │   ├── pi_h3_2step_dwd_adapter_int8_convrot.safetensors\n│   │   └── pi_h3_4step_dwd_adapter_int8_convrot.safetensors\n│   ├── 📂 vae/\n│   │   ├── minimax_h3_video_vae_int8_convrot.safetensors\n│   │   └── minimax_h3_audio_vae_fp32.safetensors\n│   └── 📂 text_encoders/\n│       └── qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors\n```\n\n## Sampler steps\n\n`steps` on `pi-H3 Adapter (2 or 4 steps)` selects the adapter and its recommended `max_raw_t` (0.93 for 2 steps, 0.96 for 4 steps). `final_step_size_scale` is 0.6. `ModelSamplingMiniMaxH3` sets the video and audio shifts (12 and 3 by default).\n\n## Sparse attention\n\n`Model Sparse Attention` (Sol) speeds up sampling. Bypass it to use dense attention."
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 39,
+      "type": "356a2ff0-98d5-4fa9-9bbd-452cccf6966f",
+      "pos": [
+        30,
+        334
+      ],
+      "size": [
+        270,
+        154
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "MODEL",
+          "link": 42
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "widget": {
+            "name": "steps"
+          },
+          "link": null
+        },
+        {
+          "name": "2-step adapter",
+          "type": "COMBO",
+          "widget": {
+            "name": "2-step adapter"
+          },
+          "link": null
+        },
+        {
+          "name": "4-step adapter",
+          "type": "COMBO",
+          "widget": {
+            "name": "4-step adapter"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "label": "steps",
+          "localized_name": "INT",
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            43
+          ]
+        },
+        {
+          "label": "max_raw_t",
+          "localized_name": "FLOAT",
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": [
+            44
+          ]
+        },
+        {
+          "label": "model",
+          "localized_name": "output",
+          "name": "output",
+          "type": "MODEL",
+          "links": [
+            45
+          ]
+        }
+      ],
+      "title": "pi-H3 Adapter (2 or 4 steps)",
+      "properties": {
+        "previewExposures": []
+      },
+      "widgets_values": [
+        2,
+        "pi_h3_2step_dwd_adapter_int8_convrot.safetensors",
+        "pi_h3_4step_dwd_adapter_int8_convrot.safetensors"
+      ]
+    },
+    {
+      "id": 40,
+      "type": "a74d60af-3935-41b1-a4bc-a21f1fa87ceb",
+      "pos": [
+        470,
+        250
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "seconds",
+          "type": "FLOAT",
+          "widget": {
+            "name": "seconds"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "label": "length",
+          "localized_name": "INT",
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            49
+          ]
+        }
+      ],
+      "title": "Duration",
+      "properties": {
+        "previewExposures": []
+      },
+      "widgets_values": [
+        5
+      ]
     }
   ],
   "links": [
-    [
-      1,
-      17,
-      0,
-      2,
-      0,
-      "MODEL"
-    ],
     [
       2,
       3,
@@ -1124,7 +1612,55 @@
       "VAE"
     ],
     [
+      4,
+      30,
+      0,
       6,
+      5,
+      "INT"
+    ],
+    [
+      5,
+      30,
+      1,
+      6,
+      6,
+      "INT"
+    ],
+    [
+      7,
+      23,
+      0,
+      6,
+      2,
+      "IMAGE"
+    ],
+    [
+      8,
+      24,
+      0,
+      6,
+      3,
+      "IMAGE"
+    ],
+    [
+      9,
+      20,
+      0,
+      8,
+      0,
+      "MODEL"
+    ],
+    [
+      10,
+      20,
+      0,
+      9,
+      0,
+      "MODEL"
+    ],
+    [
+      11,
       6,
       0,
       9,
@@ -1132,7 +1668,7 @@
       "CONDITIONING"
     ],
     [
-      7,
+      12,
       10,
       0,
       11,
@@ -1140,7 +1676,7 @@
       "NOISE"
     ],
     [
-      8,
+      13,
       9,
       0,
       11,
@@ -1148,7 +1684,7 @@
       "GUIDER"
     ],
     [
-      9,
+      14,
       7,
       0,
       11,
@@ -1156,7 +1692,7 @@
       "SAMPLER"
     ],
     [
-      10,
+      15,
       8,
       0,
       11,
@@ -1164,7 +1700,7 @@
       "SIGMAS"
     ],
     [
-      11,
+      16,
       6,
       1,
       11,
@@ -1172,7 +1708,7 @@
       "LATENT"
     ],
     [
-      12,
+      17,
       11,
       0,
       12,
@@ -1180,7 +1716,7 @@
       "LATENT"
     ],
     [
-      13,
+      18,
       11,
       0,
       13,
@@ -1188,7 +1724,7 @@
       "LATENT"
     ],
     [
-      14,
+      19,
       5,
       0,
       13,
@@ -1196,7 +1732,7 @@
       "VAE"
     ],
     [
-      15,
+      20,
       12,
       0,
       14,
@@ -1204,7 +1740,7 @@
       "IMAGE"
     ],
     [
-      16,
+      21,
       13,
       0,
       14,
@@ -1212,7 +1748,7 @@
       "AUDIO"
     ],
     [
-      18,
+      23,
       1,
       0,
       17,
@@ -1220,7 +1756,55 @@
       "MODEL"
     ],
     [
-      17,
+      26,
+      21,
+      0,
+      23,
+      0,
+      "IMAGE"
+    ],
+    [
+      27,
+      30,
+      0,
+      23,
+      2,
+      "INT"
+    ],
+    [
+      28,
+      30,
+      1,
+      23,
+      3,
+      "INT"
+    ],
+    [
+      29,
+      22,
+      0,
+      24,
+      0,
+      "IMAGE"
+    ],
+    [
+      30,
+      30,
+      0,
+      24,
+      2,
+      "INT"
+    ],
+    [
+      31,
+      30,
+      1,
+      24,
+      3,
+      "INT"
+    ],
+    [
+      22,
       14,
       0,
       15,
@@ -1228,38 +1812,925 @@
       "VIDEO"
     ],
     [
+      25,
       19,
-      2,
       0,
-      19,
+      20,
       0,
       "MODEL"
     ],
     [
-      20,
-      19,
+      42,
+      17,
+      0,
+      39,
+      0,
+      "MODEL"
+    ],
+    [
+      43,
+      39,
       0,
       8,
+      1,
+      "INT"
+    ],
+    [
+      44,
+      39,
+      1,
+      8,
+      3,
+      "FLOAT"
+    ],
+    [
+      45,
+      39,
+      2,
+      19,
       0,
       "MODEL"
     ],
     [
-      21,
-      19,
+      49,
+      40,
       0,
-      9,
-      0,
-      "MODEL"
+      6,
+      7,
+      "INT"
     ]
   ],
-  "groups": [],
+  "groups": [
+    {
+      "id": 1,
+      "title": "Step1 - Load models",
+      "bounding": [
+        10,
+        -50,
+        310,
+        1040
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "Step2 - Video size and duration",
+      "bounding": [
+        450,
+        -50,
+        440,
+        418
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "Step3 - Prompt",
+      "bounding": [
+        450,
+        368,
+        460,
+        560
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "Optional - First and last frames",
+      "bounding": [
+        450,
+        968,
+        540,
+        620
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 5,
+      "title": "Step4 - Sampling",
+      "bounding": [
+        950,
+        -50,
+        330,
+        1098
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    }
+  ],
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "356a2ff0-98d5-4fa9-9bbd-452cccf6966f",
+        "version": 1,
+        "state": {
+          "lastGroupId": 5,
+          "lastNodeId": 40,
+          "lastLinkId": 50,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "pi-H3 Adapter",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -158,
+            324,
+            128,
+            68
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            1300,
+            304,
+            128,
+            108
+          ]
+        },
+        "inputs": [
+          {
+            "id": "d52733e2-7307-4848-9bc1-edd76cc707b8",
+            "name": "model",
+            "type": "MODEL",
+            "linkIds": [
+              1,
+              33
+            ],
+            "localized_name": "model",
+            "pos": [
+              51,
+              24
+            ]
+          },
+          {
+            "id": "81c97db4-92f6-427a-9bb5-db34e3a442bb",
+            "name": "steps",
+            "type": "INT",
+            "linkIds": [
+              46
+            ],
+            "pos": [
+              0,
+              0
+            ]
+          },
+          {
+            "id": "58ecdcd5-06af-4ca2-912c-2c60ae266bcf",
+            "name": "2-step adapter",
+            "type": "COMBO",
+            "linkIds": [
+              47
+            ],
+            "pos": [
+              0,
+              0
+            ]
+          },
+          {
+            "id": "50f10d64-a0e9-4d82-ad1d-0a6fba648624",
+            "name": "4-step adapter",
+            "type": "COMBO",
+            "linkIds": [
+              48
+            ],
+            "pos": [
+              0,
+              0
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "2e5486c0-35fc-4606-936b-533f2a6c0a78",
+            "name": "INT",
+            "type": "INT",
+            "linkIds": [
+              40
+            ],
+            "localized_name": "INT",
+            "label": "steps",
+            "pos": [
+              24,
+              24
+            ]
+          },
+          {
+            "id": "08b25231-24df-4cd0-a94a-663209cea5c6",
+            "name": "FLOAT",
+            "type": "FLOAT",
+            "linkIds": [
+              41
+            ],
+            "localized_name": "FLOAT",
+            "label": "max_raw_t",
+            "pos": [
+              24,
+              44
+            ]
+          },
+          {
+            "id": "6635e991-4bb5-43d0-89b5-d56f02dfeda4",
+            "name": "output",
+            "type": "MODEL",
+            "linkIds": [
+              36
+            ],
+            "localized_name": "output",
+            "label": "model",
+            "pos": [
+              24,
+              64
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 36,
+            "type": "PrimitiveInt",
+            "pos": [
+              970,
+              30
+            ],
+            "size": [
+              270,
+              82
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "value",
+                "name": "value",
+                "type": "INT",
+                "widget": {
+                  "name": "value"
+                },
+                "link": 46
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "INT",
+                "name": "INT",
+                "type": "INT",
+                "links": [
+                  37,
+                  38,
+                  40
+                ]
+              }
+            ],
+            "title": "Steps (2 or 4)",
+            "properties": {
+              "Node name for S&R": "PrimitiveInt"
+            },
+            "widgets_values": [
+              2,
+              "fixed"
+            ]
+          },
+          {
+            "id": 37,
+            "type": "ComfyMathExpression",
+            "pos": [
+              970,
+              182
+            ],
+            "size": [
+              270,
+              150
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "a",
+                "name": "values.a",
+                "type": "FLOAT,INT,BOOLEAN",
+                "link": 37
+              },
+              {
+                "localized_name": "b",
+                "name": "values.b",
+                "shape": 7,
+                "type": "FLOAT,INT,BOOLEAN",
+                "link": null
+              },
+              {
+                "localized_name": "expression",
+                "name": "expression",
+                "type": "STRING",
+                "widget": {
+                  "name": "expression"
+                },
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "FLOAT",
+                "name": "FLOAT",
+                "type": "FLOAT",
+                "links": null
+              },
+              {
+                "localized_name": "INT",
+                "name": "INT",
+                "type": "INT",
+                "links": null
+              },
+              {
+                "localized_name": "BOOL",
+                "name": "BOOL",
+                "type": "BOOLEAN",
+                "links": [
+                  39
+                ]
+              }
+            ],
+            "title": "4-step adapter?",
+            "properties": {
+              "Node name for S&R": "ComfyMathExpression"
+            },
+            "widgets_values": [
+              "a > 2"
+            ]
+          },
+          {
+            "id": 38,
+            "type": "ComfyMathExpression",
+            "pos": [
+              970,
+              402
+            ],
+            "size": [
+              270,
+              150
+            ],
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "a",
+                "name": "values.a",
+                "type": "FLOAT,INT,BOOLEAN",
+                "link": 38
+              },
+              {
+                "localized_name": "b",
+                "name": "values.b",
+                "shape": 7,
+                "type": "FLOAT,INT,BOOLEAN",
+                "link": null
+              },
+              {
+                "localized_name": "expression",
+                "name": "expression",
+                "type": "STRING",
+                "widget": {
+                  "name": "expression"
+                },
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "FLOAT",
+                "name": "FLOAT",
+                "type": "FLOAT",
+                "links": [
+                  41
+                ]
+              },
+              {
+                "localized_name": "INT",
+                "name": "INT",
+                "type": "INT",
+                "links": null
+              },
+              {
+                "localized_name": "BOOL",
+                "name": "BOOL",
+                "type": "BOOLEAN",
+                "links": null
+              }
+            ],
+            "title": "max_raw_t",
+            "properties": {
+              "Node name for S&R": "ComfyMathExpression"
+            },
+            "widgets_values": [
+              "0.96 if a > 2 else 0.93"
+            ]
+          },
+          {
+            "id": 2,
+            "type": "Load LakonLab Adapter",
+            "pos": [
+              30,
+              334
+            ],
+            "size": [
+              270,
+              82
+            ],
+            "flags": {},
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "model",
+                "name": "model",
+                "type": "MODEL",
+                "link": 1
+              },
+              {
+                "localized_name": "adapter_name",
+                "name": "adapter_name",
+                "type": "COMBO",
+                "widget": {
+                  "name": "adapter_name"
+                },
+                "link": 47
+              },
+              {
+                "localized_name": "adapter_strength",
+                "name": "adapter_strength",
+                "type": "FLOAT",
+                "widget": {
+                  "name": "adapter_strength"
+                },
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "MODEL",
+                "name": "MODEL",
+                "type": "MODEL",
+                "links": [
+                  34
+                ]
+              }
+            ],
+            "title": "Load 2-step adapter",
+            "properties": {
+              "Node name for S&R": "Load LakonLab Adapter"
+            },
+            "widgets_values": [
+              "pi_h3_2step_dwd_adapter_int8_convrot.safetensors",
+              1
+            ]
+          },
+          {
+            "id": 34,
+            "type": "Load LakonLab Adapter",
+            "pos": [
+              30,
+              486
+            ],
+            "size": [
+              270,
+              82
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "model",
+                "name": "model",
+                "type": "MODEL",
+                "link": 33
+              },
+              {
+                "localized_name": "adapter_name",
+                "name": "adapter_name",
+                "type": "COMBO",
+                "widget": {
+                  "name": "adapter_name"
+                },
+                "link": 48
+              },
+              {
+                "localized_name": "adapter_strength",
+                "name": "adapter_strength",
+                "type": "FLOAT",
+                "widget": {
+                  "name": "adapter_strength"
+                },
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "MODEL",
+                "name": "MODEL",
+                "type": "MODEL",
+                "links": [
+                  35
+                ]
+              }
+            ],
+            "title": "Load 4-step adapter",
+            "properties": {
+              "Node name for S&R": "Load LakonLab Adapter"
+            },
+            "widgets_values": [
+              "pi_h3_4step_dwd_adapter_int8_convrot.safetensors",
+              1
+            ]
+          },
+          {
+            "id": 35,
+            "type": "ComfySwitchNode",
+            "pos": [
+              30,
+              638
+            ],
+            "size": [
+              270,
+              78
+            ],
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "on_false",
+                "name": "on_false",
+                "shape": 7,
+                "type": "*",
+                "link": 34
+              },
+              {
+                "localized_name": "on_true",
+                "name": "on_true",
+                "shape": 7,
+                "type": "*",
+                "link": 35
+              },
+              {
+                "localized_name": "switch",
+                "name": "switch",
+                "type": "BOOLEAN",
+                "widget": {
+                  "name": "switch"
+                },
+                "link": 39
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "output",
+                "name": "output",
+                "type": "*",
+                "links": [
+                  36
+                ]
+              }
+            ],
+            "title": "Adapter for the steps",
+            "properties": {
+              "Node name for S&R": "ComfySwitchNode"
+            },
+            "widgets_values": [
+              false
+            ]
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 37,
+            "origin_id": 36,
+            "origin_slot": 0,
+            "target_id": 37,
+            "target_slot": 0,
+            "type": "INT"
+          },
+          {
+            "id": 38,
+            "origin_id": 36,
+            "origin_slot": 0,
+            "target_id": 38,
+            "target_slot": 0,
+            "type": "INT"
+          },
+          {
+            "id": 34,
+            "origin_id": 2,
+            "origin_slot": 0,
+            "target_id": 35,
+            "target_slot": 0,
+            "type": "MODEL"
+          },
+          {
+            "id": 35,
+            "origin_id": 34,
+            "origin_slot": 0,
+            "target_id": 35,
+            "target_slot": 1,
+            "type": "MODEL"
+          },
+          {
+            "id": 39,
+            "origin_id": 37,
+            "origin_slot": 2,
+            "target_id": 35,
+            "target_slot": 2,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 1,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 2,
+            "target_slot": 0,
+            "type": "MODEL"
+          },
+          {
+            "id": 33,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 34,
+            "target_slot": 0,
+            "type": "MODEL"
+          },
+          {
+            "id": 40,
+            "origin_id": 36,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "INT"
+          },
+          {
+            "id": 41,
+            "origin_id": 38,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 1,
+            "type": "FLOAT"
+          },
+          {
+            "id": 36,
+            "origin_id": 35,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 2,
+            "type": "MODEL"
+          },
+          {
+            "id": 46,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 36,
+            "target_slot": 0,
+            "type": "INT"
+          },
+          {
+            "id": 47,
+            "origin_id": -10,
+            "origin_slot": 2,
+            "target_id": 2,
+            "target_slot": 1,
+            "type": "COMBO"
+          },
+          {
+            "id": 48,
+            "origin_id": -10,
+            "origin_slot": 3,
+            "target_id": 34,
+            "target_slot": 1,
+            "type": "COMBO"
+          }
+        ],
+        "extra": {}
+      },
+      {
+        "id": "a74d60af-3935-41b1-a4bc-a21f1fa87ceb",
+        "version": 1,
+        "state": {
+          "lastGroupId": 5,
+          "lastNodeId": 40,
+          "lastLinkId": 50,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Frame Count",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            282,
+            375,
+            128,
+            48
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            930,
+            365,
+            128,
+            68
+          ]
+        },
+        "inputs": [
+          {
+            "id": "d0484a8e-11dc-4ba1-8a63-cfa9900f9865",
+            "name": "seconds",
+            "type": "FLOAT",
+            "linkIds": [
+              50
+            ],
+            "pos": [
+              0,
+              0
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "6ce08b9d-e5b9-4bb7-8e98-355cbdcb21a2",
+            "name": "INT",
+            "type": "INT",
+            "linkIds": [
+              6
+            ],
+            "localized_name": "INT",
+            "label": "length",
+            "pos": [
+              24,
+              24
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 31,
+            "type": "PrimitiveFloat",
+            "pos": [
+              470,
+              250
+            ],
+            "size": [
+              270,
+              58
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "value",
+                "name": "value",
+                "type": "FLOAT",
+                "widget": {
+                  "name": "value"
+                },
+                "link": 50
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "FLOAT",
+                "name": "FLOAT",
+                "type": "FLOAT",
+                "links": [
+                  32
+                ]
+              }
+            ],
+            "title": "Duration (seconds)",
+            "properties": {
+              "Node name for S&R": "PrimitiveFloat"
+            },
+            "widgets_values": [
+              5
+            ]
+          },
+          {
+            "id": 32,
+            "type": "ComfyMathExpression",
+            "pos": [
+              470,
+              378
+            ],
+            "size": [
+              400,
+              200
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "a",
+                "name": "values.a",
+                "type": "FLOAT,INT,BOOLEAN",
+                "link": 32
+              },
+              {
+                "localized_name": "b",
+                "name": "values.b",
+                "shape": 7,
+                "type": "FLOAT,INT,BOOLEAN",
+                "link": null
+              },
+              {
+                "localized_name": "expression",
+                "name": "expression",
+                "type": "STRING",
+                "widget": {
+                  "name": "expression"
+                },
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "FLOAT",
+                "name": "FLOAT",
+                "type": "FLOAT",
+                "links": null
+              },
+              {
+                "localized_name": "INT",
+                "name": "INT",
+                "type": "INT",
+                "links": [
+                  6
+                ]
+              },
+              {
+                "localized_name": "BOOL",
+                "name": "BOOL",
+                "type": "BOOLEAN",
+                "links": null
+              }
+            ],
+            "title": "Frame count",
+            "properties": {
+              "Node name for S&R": "ComfyMathExpression"
+            },
+            "widgets_values": [
+              "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17"
+            ]
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 32,
+            "origin_id": 31,
+            "origin_slot": 0,
+            "target_id": 32,
+            "target_slot": 0,
+            "type": "FLOAT"
+          },
+          {
+            "id": 6,
+            "origin_id": 32,
+            "origin_slot": 1,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "INT"
+          },
+          {
+            "id": 50,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 31,
+            "target_slot": 0,
+            "type": "FLOAT"
+          }
+        ],
+        "extra": {}
+      }
+    ]
+  },
   "config": {},
   "extra": {
     "ds": {
-      "scale": 0.5,
+      "scale": 0.45,
       "offset": [
-        60,
-        60
+        680,
+        120
       ]
     }
   },
