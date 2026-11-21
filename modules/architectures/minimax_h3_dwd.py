@@ -3,6 +3,7 @@
 import torch
 from torch import nn
 
+import comfy.model_patcher
 import comfy.ops
 import comfy.patcher_extension
 
@@ -26,8 +27,7 @@ class MiniMaxH3DWDNormOut(nn.Module):
 
 
 class MiniMaxH3DWD(DWDPixelHead):
-    """The DWD output norm and pixel head of a LakonLab DWD adapter on MiniMax H3, installed as
-    ``diffusion_model.dwd``.
+    """The DWD output norm and pixel head of a LakonLab DWD adapter on MiniMax H3.
 
     At the last sampling step, the final hidden states of the target video rows decode directly to pixels.
     """
@@ -52,18 +52,19 @@ class MiniMaxH3DWD(DWDPixelHead):
 def patch_minimax_h3_dwd(model, dwd_sd, load_module):
     """Install the DWD head of a pi-H3 DWD adapter on a clone of a native MiniMax H3 model.
 
-    The head is an object patch ``diffusion_model.dwd`` (so ComfyUI loads and offloads it with the model). ComfyUI's
-    ``_run_blocks`` is the only place holding the final hidden states, so it is wrapped to decode them with the head
-    at the last step of the sampling schedule, on the positive pass only, into the holder the outer-sample wrapper
-    gave this sampling run.
+    The head is its own ModelPatcher, registered as an additional model so that ComfyUI loads and offloads it with
+    the denoiser while the denoiser's own weights stay untouched. ComfyUI's ``_run_blocks`` is the only place
+    holding the final hidden states, so it is wrapped to decode them with the head at the last step of the
+    sampling schedule, on the positive pass only, into the holder the outer-sample wrapper gave this sampling run.
     """
-    diffusion_model = model.model.diffusion_model
     dwd = MiniMaxH3DWD(
-        dwd_sd, diffusion_model.final_layer.norm.eps, dtype=dwd_sd["dwd_norm_out.linear.weight"].dtype,
+        dwd_sd, model.model.diffusion_model.final_layer.norm.eps, dtype=dwd_sd["dwd_norm_out.linear.weight"].dtype,
         device=model.offload_device, operations=comfy.ops.mixed_precision_ops())
     load_module(dwd, dwd_sd)
+    head = comfy.model_patcher.CoreModelPatcher(dwd, load_device=model.load_device, offload_device=model.offload_device)
 
     model = model.clone()
+    model.set_additional_models("lakonlab_dwd", [head])
     run_blocks = model.get_model_object("diffusion_model._run_blocks")
 
     def run_blocks_and_decode(h, t_emb, mod_segments, layout, transformer_options):
@@ -73,10 +74,9 @@ def patch_minimax_h3_dwd(model, dwd_sd, load_module):
         sample_sigmas = transformer_options.get("sample_sigmas")
         if holder is not None and transformer_options.get("cond_or_uncond") == [0] and torch.isclose(
                 sigmas.flatten()[0].float(), sample_sigmas[sample_sigmas > 0][-1].float().to(sigmas.device)):
-            holder.pixels = diffusion_model.dwd.decode(h, t_emb, mod_segments, layout)
+            holder.pixels = dwd.decode(h, t_emb, mod_segments, layout)
         return h
 
-    model.add_object_patch("diffusion_model.dwd", dwd)
     model.add_object_patch("diffusion_model._run_blocks", run_blocks_and_decode)
     model.add_wrapper_with_key(comfy.patcher_extension.WrappersMP.OUTER_SAMPLE, "lakonlab_dwd", dwd_outer_sample_wrapper)
     return model

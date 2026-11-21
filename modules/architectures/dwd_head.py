@@ -40,9 +40,9 @@ class DWDPixelHead(nn.Module):
 
         The features are released once expanded: pass them without keeping a reference.
         """
-        x = self.dwd_pixel_refiner.expand(features, token_grid_size)
+        expanded = self.dwd_pixel_refiner.expand(features, token_grid_size)
         del features
-        return self.dwd_pixel_refiner.refine(x)
+        return self.dwd_pixel_refiner.refine(*expanded)
 
 
 # DWD pixels of the latest sampling runs, by the fingerprint of the video latent each run returned
