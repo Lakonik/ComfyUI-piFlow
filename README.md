@@ -44,7 +44,7 @@ This code repository is licensed under the Apache-2.0 License. Models used in th
 ## Changelog
 
 - **v1.4.1** (2026-11-21)
-  - Add pi-H3 workflows with kijai's BF16 Sol sparse attention ([ComfyUI-SolAttn_triton](https://github.com/kijai/ComfyUI-SolAttn_triton)), now the recommended pi-H3 workflows.
+  - Add pi-H3 workflows with Kijai's BF16 Sol sparse attention ([ComfyUI-SolAttn_triton](https://github.com/kijai/ComfyUI-SolAttn_triton)), now the recommended pi-H3 workflows.
   - Turn off `extra_tokens` of ComfyUI's built-in Sol in the pi-H3 workflows, which left block seams in the videos.
   - Update the pi-H3 speed benchmarks.
   - Fix the memory leak warning of `MiniMaxH3DWD` when the pi-H3 DWD adapter is reloaded ([#40](https://github.com/Lakonik/ComfyUI-piFlow/issues/40)).
