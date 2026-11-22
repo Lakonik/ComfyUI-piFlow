@@ -1,7 +1,7 @@
 [project]
 name = "comfyui-piflow"
 description = "ComfyUI Nodes for AsymFlow and pi-Flow."
-version = "1.4.0"
+version = "1.4.1"
 license = {file = "LICENSE"}
 
 [project.urls]
