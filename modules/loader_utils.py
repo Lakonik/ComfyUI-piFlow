@@ -579,9 +579,11 @@ def patch_model_with_adapter(model, adapter_sd, key_mapping, adapter_strength=1.
                                      and k.rpartition(".")[2] != "bias"})
         sd[layer + ".weight"] = linear.weight.dequantize()
     for key, value in sd.items():
-        if value.shape != model_sd[key].shape:
+        # Packed formats (e.g. W4A8, W6A8) store a narrower tensor; compare against the logical weight shape.
+        expected = comfy.utils.get_attr(diffusion_model, key).shape
+        if value.shape != expected:
             raise ValueError("Adapter tensor {} has shape {}, expected {}. Partial replacement is not supported.".format(
-                key, tuple(value.shape), tuple(model_sd[key].shape)))
+                key, tuple(value.shape), tuple(expected)))
 
     model = model.clone()
     for key in sd:
