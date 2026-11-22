@@ -41,7 +41,7 @@ Please download the workflow below and drag it into ComfyUI to load it. Set `ste
 
 - **pi-H3-DWD-Spark workflow**: video predicted by DWD, with [Spark-Attn](#spark-attn) (**strongly recommended**, needs [Spark-H3](#spark-attn)). Download the version for your GPU: [RTX 30 series (SM86)](../workflows/pi-H3-DWD-Spark-SM86.json), [RTX 40 series (SM89)](../workflows/pi-H3-DWD-Spark-SM89.json), or [RTX 50 series and RTX PRO Blackwell (SM120)](../workflows/pi-H3-DWD-Spark-SM120.json).
 
-Additional workflows are listed below. The workflows without DWD decode the video with the VAE.
+All workflows are listed below. Pick a row (with or without DWD) and a sparse attention, and for Spark-Attn the version for your GPU. The workflows without DWD decode the video with the VAE.
 
 | | Spark-Attn (recommended) | Kijai's Sol-Attn | ComfyUI's built-in Sol-Attn |
 |---|---|---|---|
