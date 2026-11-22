@@ -6,12 +6,21 @@ pi-H3 distills [MiniMax H3](https://www.minimax.io/blog/minimax-h3) into a 2- or
 
 ## Speed
 
-The pi-H3 DWD workflows are the fastest way to generate MiniMax H3 videos. End-to-end time of the pi-H3-DWD workflow at 2 steps (INT8 ConvRot, Sol sparse attention) on an **unlocked RTX 3090** ([gpu-unlock](https://github.com/zagitta/gpu-unlock), recommended) with **CUDA 13**, with the models loaded and the prompt encoded:
+The pi-H3 DWD workflows are the fastest way to generate MiniMax H3 videos. End-to-end time at 2 steps (INT8 ConvRot) on an **unlocked RTX 3090** ([gpu-unlock](https://github.com/zagitta/gpu-unlock), recommended) with **CUDA 13**, with the models loaded and the prompt encoded:
+
+pi-H3-DWD-KJ-Sol workflow (kijai's Sol sparse attention, recommended):
 
 | Resolution | 5 s | 10 s | 15 s |
 |---|---|---|---|
-| 864x480 | 15.5 s | 37.3 s | 69.2 s |
-| 1344x768 | 38.5 s | 97.6 s | 186.1 s |
+| 864x480 | 14.6 s | 40.2 s | 81.7 s |
+| 1344x768 | 41.0 s | 114.2 s | 234.1 s |
+
+pi-H3-DWD workflow (ComfyUI's built-in Sol sparse attention):
+
+| Resolution | 5 s | 10 s | 15 s |
+|---|---|---|---|
+| 864x480 | 14.3 s | 36.7 s | 74.0 s |
+| 1344x768 | 35.9 s | 87.2 s | 164.6 s |
 
 ## Workflows
 
@@ -23,9 +32,26 @@ pi-H3 provides 2-step and 4-step adapters. We recommend the DWD workflow, whose 
 
 Please download the workflow below and drag it into ComfyUI to load it. Set `steps` on the `pi-H3 Adapter (2 or 4 steps)` node to switch between the 2-step and 4-step adapters.
 
-- **[pi-H3-DWD.json](../workflows/pi-H3-DWD.json)**: video predicted by DWD
+- **[pi-H3-DWD-KJ-Sol.json](../workflows/pi-H3-DWD-KJ-Sol.json)**: video predicted by DWD, with kijai's Sol sparse attention (**strongly recommended**, needs [ComfyUI-SolAttn_triton](#sparse-attention))
 
-A workflow without DWD, which decodes the video with the VAE, is also provided: [pi-H3.json](../workflows/pi-H3.json).
+Additional workflows are listed below. The workflows without DWD decode the video with the VAE. ComfyUI's built-in Sol is faster than kijai's, but noticeably worse in quality.
+
+| | kijai's Sol (recommended) | ComfyUI's built-in Sol |
+|---|---|---|
+| DWD | [pi-H3-DWD-KJ-Sol.json](../workflows/pi-H3-DWD-KJ-Sol.json) | [pi-H3-DWD.json](../workflows/pi-H3-DWD.json) |
+| Without DWD | [pi-H3-KJ-Sol.json](../workflows/pi-H3-KJ-Sol.json) | [pi-H3.json](../workflows/pi-H3.json) |
+
+### Sparse attention
+
+All pi-H3 workflows use Sol sparse attention to speed up sampling. ComfyUI's built-in Sol (the `Model Sparse Attention` node) runs in INT8 and visibly degrades pi-H3 videos. The KJ Sol workflows use the BF16 Sol of kijai's [ComfyUI-SolAttn_triton](https://github.com/kijai/ComfyUI-SolAttn_triton) (the `Patch Sol-Attn` node) instead, which is much closer to the Sol of the official pi-H3 demo.
+
+To install it, clone it into your ComfyUI `custom_nodes` directory. It needs [Triton](https://github.com/triton-lang/triton) (on Windows, [triton-windows](https://github.com/woct0rdho/triton-windows)).
+```bash
+# run the following command in your ComfyUI `custom_nodes` directory
+git clone https://github.com/kijai/ComfyUI-SolAttn_triton
+```
+
+Its Triton kernels are compiled and tuned on the first run, so the first video takes longer. In either workflow, bypass the sparse attention node to use dense attention.
 
 ### Model links
 

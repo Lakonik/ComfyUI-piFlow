@@ -31,13 +31,7 @@
 
 **Please uninstall any non-official pi-H3, AsymFlow, or pi-Flow extensions before installing this extension**, as they may cause compatibility issues.
 
-### ComfyUI Manager
-
-If you are using [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager), you can load a [workflow](#workflows) first, and then install the missing nodes via ComfyUI Manager.
-
-### Manual Installation
-
-For manual installation, simply clone this repo into your ComfyUI `custom_nodes` directory.
+Clone this repo into your ComfyUI `custom_nodes` directory.
 ```bash
 # run the following command in your ComfyUI `custom_nodes` directory
 git clone https://github.com/Lakonik/ComfyUI-piFlow
@@ -48,6 +42,11 @@ git clone https://github.com/Lakonik/ComfyUI-piFlow
 This code repository is licensed under the Apache-2.0 License. Models used in the workflows are subject to their own respective licenses.
 
 ## Changelog
+
+- **v1.4.1** (2026-11-21)
+  - Add pi-H3 workflows with kijai's BF16 Sol sparse attention ([ComfyUI-SolAttn_triton](https://github.com/kijai/ComfyUI-SolAttn_triton)), now the recommended pi-H3 workflows.
+  - Turn off `extra_tokens` of ComfyUI's built-in Sol in the pi-H3 workflows, which left block seams in the videos.
+  - Update the pi-H3 speed benchmarks.
 
 - **v1.4.0** (2026-11-21)
   - Add pi-H3 nodes and workflows for MiniMax H3 (2-step and 4-step, with and without DWD).
