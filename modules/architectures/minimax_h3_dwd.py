@@ -1,5 +1,7 @@
 # Copyright (c) 2026 Hansheng Chen
 
+import weakref
+
 import torch
 from torch import nn
 
@@ -56,6 +58,9 @@ def patch_minimax_h3_dwd(model, dwd_sd, load_module):
     the denoiser while the denoiser's own weights stay untouched. ComfyUI's ``_run_blocks`` is the only place
     holding the final hidden states, so it is wrapped to decode them with the head at the last step of the
     sampling schedule, on the positive pass only, into the holder the outer-sample wrapper gave this sampling run.
+
+    ComfyUI sets object patches on the shared denoiser, where the wrapper can outlive its patchers, so it holds the head
+    only weakly: the head is freed with the last of its patchers.
     """
     dwd = MiniMaxH3DWD(
         dwd_sd, model.model.diffusion_model.final_layer.norm.eps, dtype=dwd_sd["dwd_norm_out.linear.weight"].dtype,
@@ -66,6 +71,7 @@ def patch_minimax_h3_dwd(model, dwd_sd, load_module):
     model = model.clone()
     model.set_additional_models("lakonlab_dwd", [head])
     run_blocks = model.get_model_object("diffusion_model._run_blocks")
+    dwd_ref = weakref.ref(dwd)
 
     def run_blocks_and_decode(h, t_emb, mod_segments, layout, transformer_options):
         h = run_blocks(h, t_emb, mod_segments, layout, transformer_options)
@@ -74,7 +80,7 @@ def patch_minimax_h3_dwd(model, dwd_sd, load_module):
         sample_sigmas = transformer_options.get("sample_sigmas")
         if holder is not None and transformer_options.get("cond_or_uncond") == [0] and torch.isclose(
                 sigmas.flatten()[0].float(), sample_sigmas[sample_sigmas > 0][-1].float().to(sigmas.device)):
-            holder.pixels = dwd.decode(h, t_emb, mod_segments, layout)
+            holder.pixels = dwd_ref().decode(h, t_emb, mod_segments, layout)
         return h
 
     model.add_object_patch("diffusion_model._run_blocks", run_blocks_and_decode)
