@@ -27,6 +27,8 @@ class SolH3DWDHead(NonCausalViT3DDecoder):
     def __init__(self, in_channels, pixel_patch_size, num_layers, dtype=None, device=None, operations=None):
         super().__init__(num_layers=num_layers, operations=operations)
         del self.x_embedder  # the tokens come from feature_expand
+        # the native norm_out comes from disable_weight_init, which casts its weights only under dynamic VRAM
+        self.norm_out = operations.LayerNorm(self.dim, eps=self.norm_out.eps, dtype=dtype, device=device)
         self.expansion = (pixel_patch_size[0] // PATCH, pixel_patch_size[1] // PATCH)
         self.feature_expand = operations.Linear(
             in_channels, self.dim * self.expansion[0] * self.expansion[1], dtype=dtype, device=device)
