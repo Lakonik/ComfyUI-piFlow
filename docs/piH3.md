@@ -63,7 +63,9 @@ unzip ComfyUI-Spark-H3-0.2.0-linux-x86_64-sm86-cu130.zip
 python ComfyUI-Spark-H3/install.py
 ```
 
-In Spark-H3 v0.2.0, the Linux archives for RTX 30 and 40 series GPUs only register the SM120 node. Until this is fixed, change the `_HIDDEN_ARCHITECTURE_NODES` line in `ComfyUI-Spark-H3/__init__.py` to `_HIDDEN_ARCHITECTURE_NODES = ('MiniMaxH3SolAttentionSM120',)`. Spark-H3 lists ComfyUI up to v0.44 as supported; we tested it with ComfyUI v0.46.0.
+The Linux SM86 and SM89 v0.2.0 archives were repackaged on 2026-11-24 to restore the matching Spark Attention nodes. If the SM86 or SM89 node is missing after installing an older copy of the archive, [re-download the current ZIP](https://github.com/zechengtang/Spark-H3/releases/tag/comfyui-v0.2.0), extract it over the existing `ComfyUI-Spark-H3` directory, and restart ComfyUI.
+
+Spark-H3 lists ComfyUI up to v0.44 as supported; we tested it with ComfyUI v0.46.0.
 
 #### Kijai's Sol-Attn
 
